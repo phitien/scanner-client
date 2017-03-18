@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fd6daa09903a6dd87e4d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9911a7dbeb5340c2d283"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotMainModule = true; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(563)(__webpack_require__.s = 563);
+/******/ 	return hotCreateRequire(564)(__webpack_require__.s = 564);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2713,7 +2713,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(373)("./" + name);
+            __webpack_require__(374)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -5555,7 +5555,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(337);
+exports = module.exports = __webpack_require__(338);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -5999,7 +5999,7 @@ exports.__esModule = true;
 exports.default = routerWarning;
 exports._resetWarned = _resetWarned;
 
-var _warning = __webpack_require__(543);
+var _warning = __webpack_require__(544);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -6097,7 +6097,7 @@ module.exports = invariant;
 
 
 var inherits = __webpack_require__(5)
-  , EventTarget = __webpack_require__(274)
+  , EventTarget = __webpack_require__(275)
   ;
 
 function EventEmitter() {
@@ -6822,7 +6822,7 @@ module.exports = {
 var debugTool = null;
 
 if (process.env.NODE_ENV !== 'production') {
-  var ReactDebugTool = __webpack_require__(410);
+  var ReactDebugTool = __webpack_require__(411);
   debugTool = ReactDebugTool;
 }
 
@@ -7293,11 +7293,219 @@ module.exports = ReactCurrentOwner;
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(43);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _CoreUser = __webpack_require__(329);
+
+var _CoreUser2 = _interopRequireDefault(_CoreUser);
+
+var _CoreUtil = __webpack_require__(66);
+
+var _CoreUtil2 = _interopRequireDefault(_CoreUtil);
+
+var _Service = __webpack_require__(111);
+
+var _Service2 = _interopRequireDefault(_Service);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var location = typeof window != 'undefined' ? window.location : { hash: '', search: '', href: '' };
+
+var CoreComponent = function (_React$Component) {
+    _inherits(CoreComponent, _React$Component);
+
+    function CoreComponent(props) {
+        _classCallCheck(this, CoreComponent);
+
+        var _this = _possibleConstructorReturn(this, (CoreComponent.__proto__ || Object.getPrototypeOf(CoreComponent)).call(this, props));
+
+        _this.refresh = function (state) {
+            _this.util.assign(_this.state, state, {
+                refresh: !_this.state.refresh
+            });
+            _this.setState(_this.state);
+        };
+
+        _this.renderChild = function (child, i) {
+            try {
+                var me = _this;
+                var addonProps = { key: i };
+                return _react2.default.cloneElement(child, addonProps);
+            } catch (e) {
+                return null;
+            }
+        };
+
+        _this.onLogoutOut = function (e) {
+            return _this.user.logout();
+        };
+
+        _this.validate = function () {
+            return _this.removeError();
+        };
+
+        _this.validateFieldEmail = function (field, message) {
+            var regex = /^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (regex.test(_this[field].value)) return true;
+            _this.setError(field, message);
+        };
+
+        _this.validateFieldNotEmpty = function (field, message) {
+            if (_this[field].value) return true;
+            _this.setError(field, message);
+        };
+
+        _this.validateFieldMinLength = function (field, minLength, message) {
+            if (_this[field].value && _this[field].value.length >= minLength) return true;
+            _this.setError(field, message);
+        };
+
+        _this.validateFieldMaxLength = function (field, maxLength, message) {
+            if (_this[field].value && _this[field].value.length <= maxLength) return true;
+            _this.setError(field, message);
+        };
+
+        _this.validateValuesMatched = function (field1, field2, message) {
+            if (_this[field1].value == _this[field2].value) return true;
+            _this.setError(field2, message);
+        };
+
+        _this.setError = function (field, message) {
+            return _this.setState({
+                disabled: false,
+                message: message,
+                errorField: field
+            });
+        };
+
+        _this.removeError = function () {
+            _this.setState({
+                message: null,
+                errorField: null
+            });
+            return true;
+        };
+
+        _this._service = null;
+        _this.state = { refresh: false };
+        _this.init();
+        return _this;
+    }
+
+    _createClass(CoreComponent, [{
+        key: 'init',
+        value: function init() {}
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this._mounted = true;
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this._mounted = false;
+        }
+    }, {
+        key: 'util',
+        get: function get() {
+            return _CoreUtil2.default;
+        }
+    }, {
+        key: 'routeParams',
+        get: function get() {
+            return this.util.getCookie('route-params');
+        }
+    }, {
+        key: 'authStore',
+        get: function get() {
+            return this.authService.store;
+        }
+    }, {
+        key: 'authService',
+        get: function get() {
+            return _Service2.default;
+        }
+    }, {
+        key: 'history',
+        get: function get() {
+            return this.util.history;
+        }
+    }, {
+        key: 'isMounted',
+        get: function get() {
+            return this._mounted;
+        }
+    }, {
+        key: 'user',
+        get: function get() {
+            return _CoreUser2.default;
+        }
+    }, {
+        key: 'mainClassName',
+        get: function get() {
+            return '';
+        }
+    }, {
+        key: 'className',
+        get: function get() {
+            return this.mainClassName + ' ' + (this && this.props && this.props.className ? this.props.className : '');
+        }
+    }, {
+        key: 'uuid',
+        get: function get() {
+            if (!this._uuid) this._uuid = 'app_' + new Date().valueOf() + Math.random().toFixed(16).substring(2);
+            return this._uuid;
+        },
+        set: function set(v) {
+            this._uuid = v;
+        }
+    }, {
+        key: 'showLogin',
+        get: function get() {
+            return !this.user.isLoggedIn && (location.hash == '#login' || this.util.getCookie('login-required') == 1);
+        }
+    }, {
+        key: 'showResetPassword',
+        get: function get() {
+            return location.hash == '#reset-password' || this.util.getCookie('reset-password') == 1;
+        }
+    }]);
+
+    return CoreComponent;
+}(_react2.default.Component);
+
+exports.default = CoreComponent;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 ;(function () {
   // Detect the `define` function exposed by asynchronous module loaders. The
   // strict `define` check is necessary for compatibility with `r.js`.
-  var isLoader = "function" === "function" && __webpack_require__(546);
+  var isLoader = "function" === "function" && __webpack_require__(547);
 
   // A set of types used to distinguish objects from primitives.
   var objectTypes = {
@@ -8200,7 +8408,7 @@ module.exports = ReactCurrentOwner;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(51)(module), __webpack_require__(7)))
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8472,214 +8680,6 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
   }
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(4);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = __webpack_require__(43);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _CoreUser = __webpack_require__(328);
-
-var _CoreUser2 = _interopRequireDefault(_CoreUser);
-
-var _CoreUtil = __webpack_require__(66);
-
-var _CoreUtil2 = _interopRequireDefault(_CoreUtil);
-
-var _Service = __webpack_require__(111);
-
-var _Service2 = _interopRequireDefault(_Service);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var location = typeof window != 'undefined' ? window.location : { hash: '', search: '', href: '' };
-
-var CoreComponent = function (_React$Component) {
-    _inherits(CoreComponent, _React$Component);
-
-    function CoreComponent(props) {
-        _classCallCheck(this, CoreComponent);
-
-        var _this = _possibleConstructorReturn(this, (CoreComponent.__proto__ || Object.getPrototypeOf(CoreComponent)).call(this, props));
-
-        _this.refresh = function (state) {
-            _this.util.assign(_this.state, state, {
-                refresh: !_this.state.refresh
-            });
-            _this.setState(_this.state);
-        };
-
-        _this.renderChild = function (child, i) {
-            try {
-                var me = _this;
-                var addonProps = { key: i };
-                return _react2.default.cloneElement(child, addonProps);
-            } catch (e) {
-                return null;
-            }
-        };
-
-        _this.onLogoutOut = function (e) {
-            return _this.user.logout();
-        };
-
-        _this.validate = function () {
-            return _this.removeError();
-        };
-
-        _this.validateFieldEmail = function (field, message) {
-            var regex = /^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (regex.test(_this[field].value)) return true;
-            _this.setError(field, message);
-        };
-
-        _this.validateFieldNotEmpty = function (field, message) {
-            if (_this[field].value) return true;
-            _this.setError(field, message);
-        };
-
-        _this.validateFieldMinLength = function (field, minLength, message) {
-            if (_this[field].value && _this[field].value.length >= minLength) return true;
-            _this.setError(field, message);
-        };
-
-        _this.validateFieldMaxLength = function (field, maxLength, message) {
-            if (_this[field].value && _this[field].value.length <= maxLength) return true;
-            _this.setError(field, message);
-        };
-
-        _this.validateValuesMatched = function (field1, field2, message) {
-            if (_this[field1].value == _this[field2].value) return true;
-            _this.setError(field2, message);
-        };
-
-        _this.setError = function (field, message) {
-            return _this.setState({
-                disabled: false,
-                message: message,
-                errorField: field
-            });
-        };
-
-        _this.removeError = function () {
-            _this.setState({
-                message: null,
-                errorField: null
-            });
-            return true;
-        };
-
-        _this._service = null;
-        _this.state = { refresh: false };
-        _this.init();
-        return _this;
-    }
-
-    _createClass(CoreComponent, [{
-        key: 'init',
-        value: function init() {}
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            this._mounted = true;
-        }
-    }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            this._mounted = false;
-        }
-    }, {
-        key: 'util',
-        get: function get() {
-            return _CoreUtil2.default;
-        }
-    }, {
-        key: 'routeParams',
-        get: function get() {
-            return this.util.getCookie('route-params');
-        }
-    }, {
-        key: 'authStore',
-        get: function get() {
-            return this.authService.store;
-        }
-    }, {
-        key: 'authService',
-        get: function get() {
-            return _Service2.default;
-        }
-    }, {
-        key: 'history',
-        get: function get() {
-            return this.util.history;
-        }
-    }, {
-        key: 'isMounted',
-        get: function get() {
-            return this._mounted;
-        }
-    }, {
-        key: 'user',
-        get: function get() {
-            return _CoreUser2.default;
-        }
-    }, {
-        key: 'mainClassName',
-        get: function get() {
-            return '';
-        }
-    }, {
-        key: 'className',
-        get: function get() {
-            return this.mainClassName + ' ' + (this && this.props && this.props.className ? this.props.className : '');
-        }
-    }, {
-        key: 'uuid',
-        get: function get() {
-            if (!this._uuid) this._uuid = 'app_' + new Date().valueOf() + Math.random().toFixed(16).substring(2);
-            return this._uuid;
-        },
-        set: function set(v) {
-            this._uuid = v;
-        }
-    }, {
-        key: 'showLogin',
-        get: function get() {
-            return !this.user.isLoggedIn && (location.hash == '#login' || this.util.getCookie('login-required') == 1);
-        }
-    }, {
-        key: 'showResetPassword',
-        get: function get() {
-            return location.hash == '#reset-password' || this.util.getCookie('reset-password') == 1;
-        }
-    }]);
-
-    return CoreComponent;
-}(_react2.default.Component);
-
-exports.default = CoreComponent;
 
 /***/ }),
 /* 27 */
@@ -9818,7 +9818,7 @@ module.exports = DOMLazyTree;
 
 
 
-var ReactRef = __webpack_require__(424);
+var ReactRef = __webpack_require__(425);
 var ReactInstrumentation = __webpack_require__(18);
 
 var warning = __webpack_require__(3);
@@ -10250,16 +10250,16 @@ exports['default'] = {
 
 var _assign = __webpack_require__(8);
 
-var ReactChildren = __webpack_require__(496);
+var ReactChildren = __webpack_require__(497);
 var ReactComponent = __webpack_require__(92);
-var ReactPureComponent = __webpack_require__(500);
-var ReactClass = __webpack_require__(497);
-var ReactDOMFactories = __webpack_require__(498);
+var ReactPureComponent = __webpack_require__(501);
+var ReactClass = __webpack_require__(498);
+var ReactDOMFactories = __webpack_require__(499);
 var ReactElement = __webpack_require__(33);
-var ReactPropTypes = __webpack_require__(499);
-var ReactVersion = __webpack_require__(501);
+var ReactPropTypes = __webpack_require__(500);
+var ReactVersion = __webpack_require__(502);
 
-var onlyChild = __webpack_require__(503);
+var onlyChild = __webpack_require__(504);
 var warning = __webpack_require__(3);
 
 var createElement = ReactElement.createElement;
@@ -10335,7 +10335,7 @@ module.exports = React;
 
 var inherits = __webpack_require__(5)
   , urlUtils = __webpack_require__(19)
-  , SenderReceiver = __webpack_require__(283)
+  , SenderReceiver = __webpack_require__(284)
   ;
 
 var debug = function() {};
@@ -10391,7 +10391,7 @@ module.exports = AjaxBasedTransport;
 
 
 /* global crypto:true */
-var crypto = __webpack_require__(531);
+var crypto = __webpack_require__(532);
 
 // This string has length 32, a power of 2, so the modulus doesn't introduce a
 // bias.
@@ -10452,7 +10452,7 @@ module.exports = emptyObject;
 "use strict";
 
 
-module.exports = __webpack_require__(395);
+module.exports = __webpack_require__(396);
 
 
 /***/ }),
@@ -10949,7 +10949,7 @@ module.exports = ReactInstanceMap;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 var getEventTarget = __webpack_require__(80);
 
@@ -11004,7 +11004,7 @@ module.exports = SyntheticUIEvent;
 
 
 var inherits = __webpack_require__(5)
-  , XhrDriver = __webpack_require__(278)
+  , XhrDriver = __webpack_require__(279)
   ;
 
 function XHRLocalObject(method, url, payload /*, opts */) {
@@ -11063,7 +11063,7 @@ module.exports = {
 /* WEBPACK VAR INJECTION */(function(process, global) {
 
 var eventUtils = __webpack_require__(29)
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , browser = __webpack_require__(49)
   ;
 
@@ -11558,10 +11558,10 @@ module.exports = EventPluginRegistry;
 var _assign = __webpack_require__(8);
 
 var EventPluginRegistry = __webpack_require__(52);
-var ReactEventEmitterMixin = __webpack_require__(414);
+var ReactEventEmitterMixin = __webpack_require__(415);
 var ViewportMetrics = __webpack_require__(242);
 
-var getVendorPrefixedEventName = __webpack_require__(450);
+var getVendorPrefixedEventName = __webpack_require__(451);
 var isEventSupported = __webpack_require__(81);
 
 /**
@@ -12435,7 +12435,7 @@ var _deprecateObjectProperties = __webpack_require__(59);
 
 var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 
-var _getRouteParams = __webpack_require__(483);
+var _getRouteParams = __webpack_require__(484);
 
 var _getRouteParams2 = _interopRequireDefault(_getRouteParams);
 
@@ -12683,7 +12683,7 @@ var _warning = __webpack_require__(22);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _queryString = __webpack_require__(376);
+var _queryString = __webpack_require__(377);
 
 var _runTransitionHook = __webpack_require__(91);
 
@@ -12851,43 +12851,6 @@ module.exports = exports['default'];
 
 /***/ }),
 /* 62 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(272);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(507);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(506);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(505);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(271);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(273);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "combineReducers", function() { return __WEBPACK_IMPORTED_MODULE_1__combineReducers__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "bindActionCreators", function() { return __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "applyMiddleware", function() { return __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "compose", function() { return __WEBPACK_IMPORTED_MODULE_4__compose__["a"]; });
-
-
-
-
-
-
-
-/*
-* This is a dummy function to check if the function name has been altered by minification.
-* If the function has been minified and NODE_ENV !== 'production', warn the user.
-*/
-function isCrushed() {}
-
-if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
-  __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_warning__["a" /* default */])('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
-}
-
-
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
-
-/***/ }),
-/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12965,14 +12928,14 @@ module.exports = XhrReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var inherits = __webpack_require__(5)
-  , XhrDriver = __webpack_require__(278)
+  , XhrDriver = __webpack_require__(279)
   ;
 
 function XHRCorsObject(method, url, payload, opts) {
@@ -12985,6 +12948,12 @@ XHRCorsObject.enabled = XhrDriver.enabled && XhrDriver.supportsCORS;
 
 module.exports = XHRCorsObject;
 
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ }),
 /* 65 */
@@ -13124,7 +13093,7 @@ var _objectAssign = __webpack_require__(8);
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
-var _CoreCookie = __webpack_require__(321);
+var _CoreCookie = __webpack_require__(322);
 
 var _CoreCookie2 = _interopRequireDefault(_CoreCookie);
 
@@ -13335,7 +13304,7 @@ var CoreUtil = function () {
 }();
 
 exports.default = new CoreUtil();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(292)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)))
 
 /***/ }),
 /* 67 */
@@ -13415,9 +13384,9 @@ module.exports = shallowEqual;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(365);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(367);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(372);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(368);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(373);
 
 
 
@@ -13500,7 +13469,7 @@ function isPlainObject(value) {
 
 
 var DOMLazyTree = __webpack_require__(35);
-var Danger = __webpack_require__(387);
+var Danger = __webpack_require__(388);
 var ReactDOMComponentTree = __webpack_require__(10);
 var ReactInstrumentation = __webpack_require__(18);
 
@@ -15469,21 +15438,21 @@ var _routerWarning = __webpack_require__(13);
 
 var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-var _computeChangedRoutes2 = __webpack_require__(481);
+var _computeChangedRoutes2 = __webpack_require__(482);
 
 var _computeChangedRoutes3 = _interopRequireDefault(_computeChangedRoutes2);
 
-var _TransitionUtils = __webpack_require__(478);
+var _TransitionUtils = __webpack_require__(479);
 
-var _isActive2 = __webpack_require__(485);
+var _isActive2 = __webpack_require__(486);
 
 var _isActive3 = _interopRequireDefault(_isActive2);
 
-var _getComponents = __webpack_require__(482);
+var _getComponents = __webpack_require__(483);
 
 var _getComponents2 = _interopRequireDefault(_getComponents);
 
-var _matchRoutes = __webpack_require__(487);
+var _matchRoutes = __webpack_require__(488);
 
 var _matchRoutes2 = _interopRequireDefault(_matchRoutes);
 
@@ -15804,7 +15773,7 @@ Object.defineProperty(exports, 'formatPattern', {
   }
 });
 
-var _Router2 = __webpack_require__(476);
+var _Router2 = __webpack_require__(477);
 
 var _Router3 = _interopRequireDefault(_Router2);
 
@@ -15812,19 +15781,19 @@ var _Link2 = __webpack_require__(256);
 
 var _Link3 = _interopRequireDefault(_Link2);
 
-var _IndexLink2 = __webpack_require__(470);
+var _IndexLink2 = __webpack_require__(471);
 
 var _IndexLink3 = _interopRequireDefault(_IndexLink2);
 
-var _withRouter2 = __webpack_require__(489);
+var _withRouter2 = __webpack_require__(490);
 
 var _withRouter3 = _interopRequireDefault(_withRouter2);
 
-var _IndexRedirect2 = __webpack_require__(471);
+var _IndexRedirect2 = __webpack_require__(472);
 
 var _IndexRedirect3 = _interopRequireDefault(_IndexRedirect2);
 
-var _IndexRoute2 = __webpack_require__(472);
+var _IndexRoute2 = __webpack_require__(473);
 
 var _IndexRoute3 = _interopRequireDefault(_IndexRoute2);
 
@@ -15832,23 +15801,23 @@ var _Redirect2 = __webpack_require__(257);
 
 var _Redirect3 = _interopRequireDefault(_Redirect2);
 
-var _Route2 = __webpack_require__(474);
+var _Route2 = __webpack_require__(475);
 
 var _Route3 = _interopRequireDefault(_Route2);
 
-var _History2 = __webpack_require__(469);
+var _History2 = __webpack_require__(470);
 
 var _History3 = _interopRequireDefault(_History2);
 
-var _Lifecycle2 = __webpack_require__(473);
+var _Lifecycle2 = __webpack_require__(474);
 
 var _Lifecycle3 = _interopRequireDefault(_Lifecycle2);
 
-var _RouteContext2 = __webpack_require__(475);
+var _RouteContext2 = __webpack_require__(476);
 
 var _RouteContext3 = _interopRequireDefault(_RouteContext2);
 
-var _useRoutes2 = __webpack_require__(488);
+var _useRoutes2 = __webpack_require__(489);
 
 var _useRoutes3 = _interopRequireDefault(_useRoutes2);
 
@@ -15856,13 +15825,13 @@ var _RouterContext2 = __webpack_require__(58);
 
 var _RouterContext3 = _interopRequireDefault(_RouterContext2);
 
-var _RoutingContext2 = __webpack_require__(477);
+var _RoutingContext2 = __webpack_require__(478);
 
 var _RoutingContext3 = _interopRequireDefault(_RoutingContext2);
 
 var _PropTypes3 = _interopRequireDefault(_PropTypes2);
 
-var _match2 = __webpack_require__(486);
+var _match2 = __webpack_require__(487);
 
 var _match3 = _interopRequireDefault(_match2);
 
@@ -15870,15 +15839,15 @@ var _useRouterHistory2 = __webpack_require__(262);
 
 var _useRouterHistory3 = _interopRequireDefault(_useRouterHistory2);
 
-var _applyRouterMiddleware2 = __webpack_require__(479);
+var _applyRouterMiddleware2 = __webpack_require__(480);
 
 var _applyRouterMiddleware3 = _interopRequireDefault(_applyRouterMiddleware2);
 
-var _browserHistory2 = __webpack_require__(480);
+var _browserHistory2 = __webpack_require__(481);
 
 var _browserHistory3 = _interopRequireDefault(_browserHistory2);
 
-var _hashHistory2 = __webpack_require__(484);
+var _hashHistory2 = __webpack_require__(485);
 
 var _hashHistory3 = _interopRequireDefault(_hashHistory2);
 
@@ -16398,32 +16367,40 @@ module.exports = getIteratorFn;
 
 /***/ }),
 /* 97 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(process) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(507);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(506);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(274);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "combineReducers", function() { return __WEBPACK_IMPORTED_MODULE_1__combineReducers__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "bindActionCreators", function() { return __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "applyMiddleware", function() { return __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "compose", function() { return __WEBPACK_IMPORTED_MODULE_4__compose__["a"]; });
 
 
-exports.__esModule = true;
-function createThunkMiddleware(extraArgument) {
-  return function (_ref) {
-    var dispatch = _ref.dispatch,
-        getState = _ref.getState;
-    return function (next) {
-      return function (action) {
-        if (typeof action === 'function') {
-          return action(dispatch, getState, extraArgument);
-        }
 
-        return next(action);
-      };
-    };
-  };
+
+
+
+
+/*
+* This is a dummy function to check if the function name has been altered by minification.
+* If the function has been minified and NODE_ENV !== 'production', warn the user.
+*/
+function isCrushed() {}
+
+if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
+  __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__utils_warning__["a" /* default */])('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
 }
 
-var thunk = createThunkMiddleware();
-thunk.withExtraArgument = createThunkMiddleware;
 
-exports['default'] = thunk;
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
 /* 98 */
@@ -16462,7 +16439,7 @@ module.exports = Event;
 /* WEBPACK VAR INJECTION */(function(global) {
 
 var inherits = __webpack_require__(5)
-  , IframeTransport = __webpack_require__(282)
+  , IframeTransport = __webpack_require__(283)
   , objectUtils = __webpack_require__(101)
   ;
 
@@ -16644,9 +16621,9 @@ module.exports = {
 "use strict";
 
 
-var required = __webpack_require__(508)
-  , lolcation = __webpack_require__(540)
-  , qs = __webpack_require__(380)
+var required = __webpack_require__(509)
+  , lolcation = __webpack_require__(541)
+  , qs = __webpack_require__(381)
   , protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i;
 
 /**
@@ -17038,7 +17015,7 @@ module.exports = URL;
 
 	} else if (!capturedSetTimeout) { // vert.x
 		var vertxRequire = require;
-		var vertx = __webpack_require__(562);
+		var vertx = __webpack_require__(563);
 		setTimer = function (f, ms) { return vertx.setTimer(ms, f); };
 		clearTimer = vertx.cancelTimer;
 		asap = vertx.runOnLoop || vertx.runOnContext;
@@ -17373,11 +17350,11 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _reactRouter = __webpack_require__(88);
 
-var _reactRedux = __webpack_require__(466);
+var _reactRedux = __webpack_require__(467);
 
-var _redux = __webpack_require__(62);
+var _redux = __webpack_require__(97);
 
-var _reduxThunk = __webpack_require__(97);
+var _reduxThunk = __webpack_require__(271);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -17477,7 +17454,7 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
@@ -17507,7 +17484,7 @@ var CoreBrand = function (_CoreComponent) {
                 _react2.default.createElement(
                     'div',
                     { className: 'app-name' },
-                    'Scanner Application'
+                    'Scanner'
                 ),
                 ' - ',
                 _react2.default.createElement(
@@ -17541,7 +17518,7 @@ var _AppDispatcher = __webpack_require__(112);
 
 var _AppDispatcher2 = _interopRequireDefault(_AppDispatcher);
 
-var _CoreService2 = __webpack_require__(327);
+var _CoreService2 = __webpack_require__(328);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17595,11 +17572,15 @@ var Store = function (_CoreStore) {
     }, {
         key: 'authJWTKey',
         get: function get() {
-            return this.getProp('app-jwt', this.util.getCookie('app-jwt'));
+            return this.util.getCookie('app-jwt');
         },
         set: function set(v) {
-            this.util.setCookie('app-jwt', v);
-            this.setProp('app-jwt', v, true);
+            if (v) {
+                this.util.setCookie('app-jwt', v);
+            } else {
+                this.util.deleteCookie('app-jwt');
+            }
+            this.emitChange();
         }
     }, {
         key: 'isLoggedIn',
@@ -17643,7 +17624,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _flux = __webpack_require__(359);
+var _flux = __webpack_require__(360);
 
 var dispatcher = new _flux.Dispatcher({
   logLevel: 'ALL'
@@ -18379,7 +18360,7 @@ module.exports = Html5Entities;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(371);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(372);
 
 
 /** Built-in value references. */
@@ -46762,7 +46743,7 @@ var DOMProperty = __webpack_require__(27);
 var ReactDOMComponentTree = __webpack_require__(10);
 var ReactInstrumentation = __webpack_require__(18);
 
-var quoteAttributeValueForBrowser = __webpack_require__(451);
+var quoteAttributeValueForBrowser = __webpack_require__(452);
 var warning = __webpack_require__(3);
 
 var VALID_ATTRIBUTE_NAME_REGEX = new RegExp('^[' + DOMProperty.ATTRIBUTE_NAME_START_CHAR + '][' + DOMProperty.ATTRIBUTE_NAME_CHAR + ']*$');
@@ -47366,9 +47347,9 @@ module.exports = ReactHostComponent;
 
 
 
-var ReactDOMSelection = __webpack_require__(405);
+var ReactDOMSelection = __webpack_require__(406);
 
-var containsNode = __webpack_require__(347);
+var containsNode = __webpack_require__(348);
 var focusNode = __webpack_require__(115);
 var getActiveElement = __webpack_require__(116);
 
@@ -47503,12 +47484,12 @@ var React = __webpack_require__(39);
 var ReactBrowserEventEmitter = __webpack_require__(53);
 var ReactCurrentOwner = __webpack_require__(23);
 var ReactDOMComponentTree = __webpack_require__(10);
-var ReactDOMContainerInfo = __webpack_require__(397);
-var ReactDOMFeatureFlags = __webpack_require__(399);
+var ReactDOMContainerInfo = __webpack_require__(398);
+var ReactDOMFeatureFlags = __webpack_require__(400);
 var ReactFeatureFlags = __webpack_require__(236);
 var ReactInstanceMap = __webpack_require__(46);
 var ReactInstrumentation = __webpack_require__(18);
-var ReactMarkupChecksum = __webpack_require__(419);
+var ReactMarkupChecksum = __webpack_require__(420);
 var ReactReconciler = __webpack_require__(36);
 var ReactUpdateQueue = __webpack_require__(76);
 var ReactUpdates = __webpack_require__(21);
@@ -48315,11 +48296,11 @@ module.exports = getTextContentAccessor;
 var _prodInvariant = __webpack_require__(6),
     _assign = __webpack_require__(8);
 
-var ReactCompositeComponent = __webpack_require__(394);
+var ReactCompositeComponent = __webpack_require__(395);
 var ReactEmptyComponent = __webpack_require__(235);
 var ReactHostComponent = __webpack_require__(237);
 
-var getNextDebugID = __webpack_require__(448);
+var getNextDebugID = __webpack_require__(449);
 var invariant = __webpack_require__(2);
 var warning = __webpack_require__(3);
 
@@ -48562,9 +48543,9 @@ module.exports = setTextContent;
 var _prodInvariant = __webpack_require__(6);
 
 var ReactCurrentOwner = __webpack_require__(23);
-var REACT_ELEMENT_TYPE = __webpack_require__(413);
+var REACT_ELEMENT_TYPE = __webpack_require__(414);
 
-var getIteratorFn = __webpack_require__(447);
+var getIteratorFn = __webpack_require__(448);
 var invariant = __webpack_require__(2);
 var KeyEscapeUtils = __webpack_require__(72);
 var warning = __webpack_require__(3);
@@ -48791,7 +48772,7 @@ module.exports = findTabbableDescendants;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Subscription__ = __webpack_require__(467);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Subscription__ = __webpack_require__(468);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_PropTypes__ = __webpack_require__(254);
 /* harmony export (immutable) */ __webpack_exports__["a"] = connectAdvanced;
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -49536,7 +49517,7 @@ var _useBasename = __webpack_require__(267);
 
 var _useBasename2 = _interopRequireDefault(_useBasename);
 
-var _createMemoryHistory = __webpack_require__(493);
+var _createMemoryHistory = __webpack_require__(494);
 
 var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 
@@ -50063,17 +50044,17 @@ var _warning = __webpack_require__(22);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _deepEqual = __webpack_require__(338);
+var _deepEqual = __webpack_require__(339);
 
 var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
 var _PathUtils = __webpack_require__(32);
 
-var _AsyncUtils = __webpack_require__(490);
+var _AsyncUtils = __webpack_require__(491);
 
 var _Actions = __webpack_require__(38);
 
-var _createLocation2 = __webpack_require__(492);
+var _createLocation2 = __webpack_require__(493);
 
 var _createLocation3 = _interopRequireDefault(_createLocation2);
 
@@ -50559,7 +50540,7 @@ var ReactCurrentOwner = __webpack_require__(23);
 var ReactComponentTreeHook = __webpack_require__(16);
 var ReactElement = __webpack_require__(33);
 
-var checkReactTypeSpec = __webpack_require__(502);
+var checkReactTypeSpec = __webpack_require__(503);
 
 var canDefineProperty = __webpack_require__(95);
 var getIteratorFn = __webpack_require__(96);
@@ -50795,6 +50776,35 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 /* 271 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+
+/***/ }),
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -50835,12 +50845,12 @@ function compose() {
 }
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(537);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(538);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = createStore;
@@ -51094,7 +51104,7 @@ function createStore(reducer, preloadedState, enhancer) {
 }
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -51122,7 +51132,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51191,7 +51201,7 @@ module.exports = EventTarget;
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51199,7 +51209,7 @@ module.exports = EventTarget;
 
 var EventEmitter = __webpack_require__(15).EventEmitter
   , inherits = __webpack_require__(5)
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , objectUtils = __webpack_require__(101)
   ;
 
@@ -51248,7 +51258,7 @@ module.exports = InfoAjax;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51256,9 +51266,9 @@ module.exports = InfoAjax;
 
 var inherits = __webpack_require__(5)
   , EventEmitter = __webpack_require__(15).EventEmitter
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , XHRLocalObject = __webpack_require__(48)
-  , InfoAjax = __webpack_require__(275)
+  , InfoAjax = __webpack_require__(276)
   ;
 
 function InfoReceiverIframe(transUrl) {
@@ -51288,7 +51298,7 @@ module.exports = InfoReceiverIframe;
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51306,7 +51316,7 @@ module.exports = global.location || {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51507,7 +51517,7 @@ module.exports = AbstractXHRObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(0)))
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {module.exports = global.EventSource;
@@ -51515,7 +51525,7 @@ module.exports = AbstractXHRObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51523,9 +51533,9 @@ module.exports = AbstractXHRObject;
 
 var inherits = __webpack_require__(5)
   , AjaxBasedTransport = __webpack_require__(40)
-  , EventSourceReceiver = __webpack_require__(523)
-  , XHRCorsObject = __webpack_require__(64)
-  , EventSourceDriver = __webpack_require__(279)
+  , EventSourceReceiver = __webpack_require__(524)
+  , XHRCorsObject = __webpack_require__(63)
+  , EventSourceDriver = __webpack_require__(280)
   ;
 
 function EventSourceTransport(transUrl) {
@@ -51549,14 +51559,14 @@ module.exports = EventSourceTransport;
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var inherits = __webpack_require__(5)
-  , HtmlfileReceiver = __webpack_require__(524)
+  , HtmlfileReceiver = __webpack_require__(525)
   , XHRLocalObject = __webpack_require__(48)
   , AjaxBasedTransport = __webpack_require__(40)
   ;
@@ -51581,7 +51591,7 @@ module.exports = HtmlFileTransport;
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51596,9 +51606,9 @@ module.exports = HtmlFileTransport;
 //    http://stevesouders.com/misc/test-postmessage.php
 
 var inherits = __webpack_require__(5)
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , EventEmitter = __webpack_require__(15).EventEmitter
-  , version = __webpack_require__(286)
+  , version = __webpack_require__(287)
   , urlUtils = __webpack_require__(19)
   , iframeUtils = __webpack_require__(50)
   , eventUtils = __webpack_require__(29)
@@ -51730,7 +51740,7 @@ module.exports = IframeTransport;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51738,8 +51748,8 @@ module.exports = IframeTransport;
 
 var inherits = __webpack_require__(5)
   , urlUtils = __webpack_require__(19)
-  , BufferedSender = __webpack_require__(521)
-  , Polling = __webpack_require__(522)
+  , BufferedSender = __webpack_require__(522)
+  , Polling = __webpack_require__(523)
   ;
 
 var debug = function() {};
@@ -51783,7 +51793,7 @@ module.exports = SenderReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51791,7 +51801,7 @@ module.exports = SenderReceiver;
 
 var inherits = __webpack_require__(5)
   , AjaxBasedTransport = __webpack_require__(40)
-  , XhrReceiver = __webpack_require__(63)
+  , XhrReceiver = __webpack_require__(62)
   , XDRObject = __webpack_require__(100)
   ;
 
@@ -51822,7 +51832,7 @@ module.exports = XdrStreamingTransport;
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51830,8 +51840,8 @@ module.exports = XdrStreamingTransport;
 
 var inherits = __webpack_require__(5)
   , AjaxBasedTransport = __webpack_require__(40)
-  , XhrReceiver = __webpack_require__(63)
-  , XHRCorsObject = __webpack_require__(64)
+  , XhrReceiver = __webpack_require__(62)
+  , XHRCorsObject = __webpack_require__(63)
   , XHRLocalObject = __webpack_require__(48)
   ;
 
@@ -51862,14 +51872,14 @@ module.exports = XhrPollingTransport;
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ (function(module, exports) {
 
 module.exports = '1.1.2';
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var EventEmitter = __webpack_require__(113);
@@ -51877,7 +51887,7 @@ module.exports = new EventEmitter();
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -51910,7 +51920,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 }(__webpack_require__(11)));
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -51972,7 +51982,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -52014,7 +52024,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -52028,24 +52038,24 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 (function(define) { 'use strict';
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
 
-	var timed = __webpack_require__(556);
-	var array = __webpack_require__(550);
-	var flow = __webpack_require__(551);
-	var fold = __webpack_require__(552);
-	var inspect = __webpack_require__(553);
-	var generate = __webpack_require__(554);
-	var progress = __webpack_require__(555);
-	var withThis = __webpack_require__(558);
-	var unhandledRejection = __webpack_require__(557);
-	var TimeoutError = __webpack_require__(288);
+	var timed = __webpack_require__(557);
+	var array = __webpack_require__(551);
+	var flow = __webpack_require__(552);
+	var fold = __webpack_require__(553);
+	var inspect = __webpack_require__(554);
+	var generate = __webpack_require__(555);
+	var progress = __webpack_require__(556);
+	var withThis = __webpack_require__(559);
+	var unhandledRejection = __webpack_require__(558);
+	var TimeoutError = __webpack_require__(289);
 
 	var Promise = [array, flow, fold, generate, progress,
 		inspect, withThis, timed, unhandledRejection]
 		.reduce(function(Promise, feature) {
 			return feature(Promise);
-		}, __webpack_require__(548));
+		}, __webpack_require__(549));
 
-	var apply = __webpack_require__(289)(Promise);
+	var apply = __webpack_require__(290)(Promise);
 
 	// Public API
 
@@ -52249,29 +52259,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 292 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
 /* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(344);
+__webpack_require__(345);
 
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _redux = __webpack_require__(62);
-
-var _reduxThunk = __webpack_require__(97);
-
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 var _App = __webpack_require__(316);
 
@@ -52281,7 +52279,7 @@ var _Routes = __webpack_require__(317);
 
 var _Routes2 = _interopRequireDefault(_Routes);
 
-var _AppStore = __webpack_require__(335);
+var _AppStore = __webpack_require__(336);
 
 var _AppStore2 = _interopRequireDefault(_AppStore);
 
@@ -52294,10 +52292,10 @@ var app = new _App2.default(_AppStore2.default, _Routes2.default);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__resourceQuery) {/* global __resourceQuery */
-var url = __webpack_require__(541);
-var stripAnsi = __webpack_require__(536);
-var socket = __webpack_require__(545);
-var overlay = __webpack_require__(544);
+var url = __webpack_require__(542);
+var stripAnsi = __webpack_require__(537);
+var socket = __webpack_require__(546);
+var overlay = __webpack_require__(545);
 
 function getCurrentScriptSource() {
 	// `document.currentScript` is the most accurate way to find the current script,
@@ -52463,7 +52461,7 @@ function reloadApp() {
 	}
 	if(hot) {
 		log("info", "[WDS] App hot update...");
-		var hotEmitter = __webpack_require__(287);
+		var hotEmitter = __webpack_require__(288);
 		hotEmitter.emit("webpackHotUpdate", currentHash);
 		if(typeof self !== "undefined" && self.window) {
 			// broadcast update to window
@@ -52517,7 +52515,7 @@ if(true) {
 					check();
 				}
 
-				__webpack_require__(547)(updatedModules, renewedModules);
+				__webpack_require__(548)(updatedModules, renewedModules);
 
 				if(upToDate()) {
 					console.log("[HMR] App is up to date.");
@@ -52533,7 +52531,7 @@ if(true) {
 			}
 		});
 	};
-	var hotEmitter = __webpack_require__(287);
+	var hotEmitter = __webpack_require__(288);
 	hotEmitter.on("webpackHotUpdate", function(currentHash) {
 		lastHash = currentHash;
 		if(!upToDate()) {
@@ -53653,7 +53651,7 @@ var _reactRouter = __webpack_require__(88);
 
 var _CoreApplication = __webpack_require__(109);
 
-var _CoreViewport = __webpack_require__(329);
+var _CoreViewport = __webpack_require__(330);
 
 var _CoreViewport2 = _interopRequireDefault(_CoreViewport);
 
@@ -53702,13 +53700,17 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
-var _Navigation = __webpack_require__(320);
+var _Navigation = __webpack_require__(321);
 
 var _Navigation2 = _interopRequireDefault(_Navigation);
+
+var _LeftNavigation = __webpack_require__(320);
+
+var _LeftNavigation2 = _interopRequireDefault(_LeftNavigation);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -53734,371 +53736,9 @@ var DashboardContent = function (_CoreComponent) {
         'div',
         { className: this.className },
         _react2.default.createElement(_Navigation2.default, null),
-        _react2.default.createElement(
-          'div',
-          { className: 'container-fluid' },
-          _react2.default.createElement(
-            'div',
-            { className: 'row' },
-            _react2.default.createElement(
-              'div',
-              { className: 'col-sm-8 col-md-9', style: { minHeight: 993 } },
-              _react2.default.createElement(
-                'div',
-                { className: 'page-header page-header-bleed-right' },
-                _react2.default.createElement(
-                  'div',
-                  { className: 'actions pull-right' },
-                  _react2.default.createElement(
-                    'a',
-                    { href: '#' },
-                    _react2.default.createElement('span', { className: 'pficon pficon-refresh' }),
-                    ' Refresh Results'
-                  )
-                ),
-                _react2.default.createElement(
-                  'h1',
-                  null,
-                  'Dashboard'
-                )
-              ),
-              _react2.default.createElement(
-                'h2',
-                { className: 'h4' },
-                'Infrastructure Performance'
-              ),
-              _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: '<div id="chart" className="c3" style="max-height: 220px; position: relative;"><svg width="1040" height="220" style="overflow: hidden;"><defs><clipPath id="c3-1489827225903-clip"><rect width="998" height="166"></rect></clipPath><clipPath id="c3-1489827225903-clip-xaxis"><rect x="-41" y="-20" width="1070" height="70"></rect></clipPath><clipPath id="c3-1489827225903-clip-yaxis"><rect x="-39" y="-4" width="60" height="190"></rect></clipPath><clipPath id="c3-1489827225903-clip-grid"><rect width="998" height="166"></rect></clipPath><clipPath id="c3-1489827225903-clip-subchart"><rect width="998"></rect></clipPath></defs><g transform="translate(40.5,4.5)"><text className="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="499" y="83" style="opacity: 0;"></text><rect className="c3-zoom-rect" width="998" height="166" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip)" className="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-grid)" className="c3-grid" style="visibility: visible;"><g className="c3-ygrids"><line className="c3-ygrid" x1="0" x2="998" y1="164" y2="164"></line><line className="c3-ygrid" x1="0" x2="998" y1="145" y2="145"></line><line className="c3-ygrid" x1="0" x2="998" y1="126" y2="126"></line><line className="c3-ygrid" x1="0" x2="998" y1="107" y2="107"></line><line className="c3-ygrid" x1="0" x2="998" y1="88" y2="88"></line><line className="c3-ygrid" x1="0" x2="998" y1="69" y2="69"></line><line className="c3-ygrid" x1="0" x2="998" y1="50" y2="50"></line><line className="c3-ygrid" x1="0" x2="998" y1="31" y2="31"></line><line className="c3-ygrid" x1="0" x2="998" y1="11" y2="11"></line></g><g className="c3-xgrid-focus"><line className="c3-xgrid-focus" x1="663" x2="663" y1="0" y2="166" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip)" className="c3-chart"><g className="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect className=" c3-event-rect c3-event-rect-0" x="5" y="0" width="86.5" height="166"></rect><rect className=" c3-event-rect c3-event-rect-1" x="91.5" y="0" width="163" height="166"></rect><rect className=" c3-event-rect c3-event-rect-2" x="254.5" y="0" width="163" height="166"></rect><rect className=" c3-event-rect c3-event-rect-3" x="417.5" y="0" width="163.5" height="166"></rect><rect className=" c3-event-rect c3-event-rect-4" x="581" y="0" width="163.5" height="166"></rect><rect className=" c3-event-rect c3-event-rect-5" x="744.5" y="0" width="163" height="166"></rect><rect className=" c3-event-rect c3-event-rect-6" x="907.5" y="0" width="86" height="166"></rect></g><g className="c3-chart-bars"><g className="c3-chart-bar c3-target c3-target-data1" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-data1 c3-bars c3-bars-data1" style="cursor: pointer;"></g></g></g><g className="c3-chart-lines"><g className="c3-chart-line c3-target c3-target-data1" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-data1 c3-lines c3-lines-data1"><path className=" c3-shape c3-shape c3-line c3-line-data1" d="M10,152.25000000000003L173,98.77777777777777L336,119.78472222222223L499,14.750000000000005L663,87.31944444444444L826,37.666666666666664L989,142.70138888888889" style="stroke: rgb(0, 136, 206); opacity: 1;"></path></g><g className=" c3-shapes c3-shapes-data1 c3-areas c3-areas-data1"><path className=" c3-shape c3-shape c3-area c3-area-data1" d="M 10 152.25000000000003" style="fill: rgb(0, 136, 206); opacity: 0.2;"></path></g><g className=" c3-selected-circles c3-selected-circles-data1"></g><g className=" c3-shapes c3-shapes-data1 c3-circles c3-circles-data1" style="cursor: pointer;"><circle className=" c3-shape c3-shape-0 c3-circle c3-circle-0" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="10" cy="152.25000000000003"></circle><circle className=" c3-shape c3-shape-1 c3-circle c3-circle-1" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="173" cy="98.77777777777777"></circle><circle className=" c3-shape c3-shape-2 c3-circle c3-circle-2" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="336" cy="119.78472222222223"></circle><circle className="c3-shape c3-shape-3 c3-circle c3-circle-3" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="499" cy="14.750000000000005"></circle><circle className="c3-shape c3-shape-4 c3-circle c3-circle-4" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="663" cy="87.31944444444444"></circle><circle className=" c3-shape c3-shape-5 c3-circle c3-circle-5" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="826" cy="37.666666666666664"></circle><circle className=" c3-shape c3-shape-6 c3-circle c3-circle-6" r="4" style="fill: rgb(0, 136, 206); opacity: 1;" cx="989" cy="142.70138888888889"></circle></g></g></g><g className="c3-chart-arcs" transform="translate(499,78)"><text className="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g className="c3-chart-texts"><g className="c3-chart-text c3-target c3-target-data1" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-data1"></g></g></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-grid)" className="c3-grid c3-grid-lines"><g className="c3-xgrid-lines"></g><g className="c3-ygrid-lines"></g></g><g className="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-xaxis)" transform="translate(0,166)" style="visibility: visible; opacity: 1;"><text className="c3-axis-x-label" transform="" x="998" dx="-0.5em" dy="-0.5em" style="text-anchor: end;"></text><g className="tick" transform="translate(10, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-01</tspan></text></g><g className="tick" transform="translate(173, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-02</tspan></text></g><g className="tick" transform="translate(336, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-03</tspan></text></g><g className="tick" transform="translate(499, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-04</tspan></text></g><g className="tick" transform="translate(663, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-05</tspan></text></g><g className="tick" transform="translate(826, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-06</tspan></text></g><g className="tick" transform="translate(989, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-07</tspan></text></g><path className="domain" d="M0,0V0H998V0"></path></g><g className="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 1;"><text className="c3-axis-y-label" transform="rotate(-90)" x="0" dx="-0.5em" dy="1.2em" style="text-anchor: end;"></text><g className="tick" transform="translate(0,164)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10%</tspan></text></g><g className="tick" transform="translate(0,145)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20%</tspan></text></g><g className="tick" transform="translate(0,126)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30%</tspan></text></g><g className="tick" transform="translate(0,107)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40%</tspan></text></g><g className="tick" transform="translate(0,88)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50%</tspan></text></g><g className="tick" transform="translate(0,69)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60%</tspan></text></g><g className="tick" transform="translate(0,50)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70%</tspan></text></g><g className="tick" transform="translate(0,31)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80%</tspan></text></g><g className="tick" transform="translate(0,11)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90%</tspan></text></g><path className="domain" d="M0,1H0V166H0"></path></g><g className="c3-axis c3-axis-y2" transform="translate(998,0)" style="visibility: hidden; opacity: 1;"><text className="c3-axis-y2-label" transform="rotate(-90)" x="0" dx="-0.5em" dy="-0.5em" style="text-anchor: end;"></text><g className="tick" transform="translate(0,166)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g className="tick" transform="translate(0,150)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g className="tick" transform="translate(0,133)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g className="tick" transform="translate(0,117)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g className="tick" transform="translate(0,100)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g className="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g className="tick" transform="translate(0,67)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g className="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g className="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g className="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g className="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path className="domain" d="M6,1H0V166H6"></path></g></g><g transform="translate(20.5,220.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-subchart)" className="c3-chart"><g className="c3-chart-bars"></g><g className="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip)" className="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect className="background" x="0" width="1018" style="visibility: hidden; cursor: crosshair;"></rect><rect className="extent" x="0" width="0" style="cursor: move;"></rect><g className="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g className="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g className="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827225903-clip-xaxis)" style="visibility: hidden; opacity: 1;"><g className="tick" transform="translate(10, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-01</tspan></text></g><g className="tick" transform="translate(173, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-02</tspan></text></g><g className="tick" transform="translate(336, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-03</tspan></text></g><g className="tick" transform="translate(499, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-04</tspan></text></g><g className="tick" transform="translate(663, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-05</tspan></text></g><g className="tick" transform="translate(826, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-06</tspan></text></g><g className="tick" transform="translate(989, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">04-07</tspan></text></g><path className="domain" d="M0,0V0H998V0"></path></g></g><g transform="translate(0,200)"><g className=" c3-legend-item c3-legend-item-data1" style="visibility: hidden; cursor: pointer;"><text x="14" y="9" style="pointer-events: none;">data1</text><rect className="c3-legend-item-event" x="0" y="-5" width="0" height="0" style="fill-opacity: 0;"></rect><line className="c3-legend-item-tile" x1="-2" y1="4" x2="8" y2="4" stroke-width="10" style="stroke: rgb(0, 136, 206); pointer-events: none;"></line></g></g><text className="c3-title" x="520" y="0"></text></svg><div className="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none; top: 102.5px; left: 723.5px;"><table className="c3-tooltip"><tbody><tr><th colspan="2">04-05</th></tr><tr className="c3-tooltip-name--data1"><td className="name"><span style="background-color:#0088ce"></span>data1</td><td className="value">50%</td></tr></tbody></table></div></div>' } }),
-              _react2.default.createElement('hr', null),
-              _react2.default.createElement(
-                'h2',
-                { className: 'h4' },
-                'Resource Usage'
-              ),
-              _react2.default.createElement(
-                'div',
-                { className: 'row' },
-                _react2.default.createElement('div', { className: 'col-sm-6', dangerouslySetInnerHTML: { __html: '<div id="chart2" className="c3" style="max-height: 171px; position: relative;"><svg width="500" height="171" style="overflow: hidden;"><defs><clipPath id="c3-1489827226334-clip"><rect width="500" height="167"></rect></clipPath><clipPath id="c3-1489827226334-clip-xaxis"><rect x="-31" y="-20" width="562" height="20"></rect></clipPath><clipPath id="c3-1489827226334-clip-yaxis"><rect x="-29" y="-4" width="20" height="191"></rect></clipPath><clipPath id="c3-1489827226334-clip-grid"><rect width="500" height="167"></rect></clipPath><clipPath id="c3-1489827226334-clip-subchart"><rect width="500"></rect></clipPath></defs><g transform="translate(0.5,4.5)"><text className="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="250" y="83.5" style="opacity: 0;"></text><rect className="c3-zoom-rect" width="500" height="167" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip)" className="c3-regions" style="visibility: hidden;"></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-grid)" className="c3-grid" style="visibility: hidden;"><g className="c3-xgrid-focus"><line className="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="167" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip)" className="c3-chart"><g className="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect className=" c3-event-rect c3-event-rect-0" x="-120" y="0" width="250" height="167"></rect><rect className=" c3-event-rect c3-event-rect-1" x="371" y="0" width="250" height="167"></rect></g><g className="c3-chart-bars"><g className="c3-chart-bar c3-target c3-target-Cloud" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Cloud c3-bars c3-bars-Cloud" style="cursor: pointer;"></g></g><g className="c3-chart-bar c3-target c3-target-Virtual" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Virtual c3-bars c3-bars-Virtual" style="cursor: pointer;"></g></g><g className="c3-chart-bar c3-target c3-target-Baremetal" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Baremetal c3-bars c3-bars-Baremetal" style="cursor: pointer;"></g></g></g><g className="c3-chart-lines"><g className="c3-chart-line c3-target c3-target-Cloud" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Cloud c3-lines c3-lines-Cloud"></g><g className=" c3-shapes c3-shapes-Cloud c3-areas c3-areas-Cloud"></g><g className=" c3-selected-circles c3-selected-circles-Cloud"></g><g className=" c3-shapes c3-shapes-Cloud c3-circles c3-circles-Cloud" style="cursor: pointer;"></g></g><g className="c3-chart-line c3-target c3-target-Virtual" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Virtual c3-lines c3-lines-Virtual"></g><g className=" c3-shapes c3-shapes-Virtual c3-areas c3-areas-Virtual"></g><g className=" c3-selected-circles c3-selected-circles-Virtual"></g><g className=" c3-shapes c3-shapes-Virtual c3-circles c3-circles-Virtual" style="cursor: pointer;"></g></g><g className="c3-chart-line c3-target c3-target-Baremetal" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Baremetal c3-lines c3-lines-Baremetal"></g><g className=" c3-shapes c3-shapes-Baremetal c3-areas c3-areas-Baremetal"></g><g className=" c3-selected-circles c3-selected-circles-Baremetal"></g><g className=" c3-shapes c3-shapes-Baremetal c3-circles c3-circles-Baremetal" style="cursor: pointer;"></g></g></g><g className="c3-chart-arcs" transform="translate(250,78.5)"><text className="c3-chart-arcs-title" style="text-anchor: middle; opacity: 1;">29,210 Host</text><g className="c3-chart-arc c3-target c3-target-Cloud"><g className=" c3-shapes c3-shapes-Cloud c3-arcs c3-arcs-Cloud"><path className=" c3-shape c3-shape c3-arc c3-arc-Cloud" transform="scale(1,1)" d="M-3.3487826992943996,74.49977368712544A74.575,74.575 0 0,1 -51.421301462012885,-54.01185407808912L-43.83653021049238,-46.04496980240719A63.575,63.575 0 0,0 -2.8548288314802743,63.510869757411996Z" style="fill: rgb(0, 110, 156); cursor: pointer; opacity: 1;"></path></g><text dy=".35em" className="" transform="translate(-48.35332561802514,18.087594044478656)" style="opacity: 1; text-anchor: middle; pointer-events: none;"></text></g><g className="c3-chart-arc c3-target c3-target-Virtual"><g className=" c3-shapes c3-shapes-Virtual c3-arcs c3-arcs-Virtual"><path className=" c3-shape c3-shape c3-arc c3-arc-Virtual" transform="scale(1,1)" d="M-51.421301462012885,-54.01185407808912A74.575,74.575 0 0,1 -1.369920525696208e-14,-74.575L-1.1678538038368947e-14,-63.575A63.575,63.575 0 0,0 -43.83653021049238,-46.04496980240719Z" style="fill: rgb(0, 168, 225); cursor: pointer; opacity: 1;"></path></g><text dy=".35em" className="" transform="translate(-19.16895651963955,-47.934916945675354)" style="opacity: 1; text-anchor: middle; pointer-events: none;"></text></g><g className="c3-chart-arc c3-target c3-target-Baremetal"><g className=" c3-shapes c3-shapes-Baremetal c3-arcs c3-arcs-Baremetal"><path className=" c3-shape c3-shape c3-arc c3-arc-Baremetal" transform="scale(1,1)" d="M4.566401752320694e-15,-74.575A74.575,74.575 0 1,1 -3.3487826992943996,74.49977368712544L-2.8548288314802743,63.510869757411996A63.575,63.575 0 1,0 3.892846012789649e-15,-63.575Z" style="fill: rgb(150, 150, 150); cursor: pointer; opacity: 1;"></path></g><text dy=".35em" className="" transform="translate(51.61260423153683,1.1594141103903395)" style="opacity: 1; text-anchor: middle; pointer-events: none;"></text></g></g><g className="c3-chart-texts"><g className="c3-chart-text c3-target c3-target-Cloud" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-Cloud"></g></g><g className="c3-chart-text c3-target c3-target-Virtual" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-Virtual"></g></g><g className="c3-chart-text c3-target c3-target-Baremetal" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-Baremetal"></g></g></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-grid)" className="c3-grid c3-grid-lines"><g className="c3-xgrid-lines"></g><g className="c3-ygrid-lines"></g></g><g className="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-xaxis)" transform="translate(0,167)" style="visibility: visible; opacity: 0;"><text className="c3-axis-x-label" transform="" x="500" dx="-0.5em" dy="-0.5em" style="text-anchor: end;"></text><g className="tick" transform="translate(5, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g className="tick" transform="translate(496, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><path className="domain" d="M0,6V0H500V6"></path></g><g className="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 0;"><text className="c3-axis-y-label" transform="rotate(-90)" x="0" dx="-0.5em" dy="1.2em" style="text-anchor: end;"></text><g className="tick" transform="translate(0,154)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g className="tick" transform="translate(0,129)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">200</tspan></text></g><g className="tick" transform="translate(0,105)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">400</tspan></text></g><g className="tick" transform="translate(0,80)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">600</tspan></text></g><g className="tick" transform="translate(0,55)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">800</tspan></text></g><g className="tick" transform="translate(0,31)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">1000</tspan></text></g><g className="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">1200</tspan></text></g><path className="domain" d="M-6,1H0V167H-6"></path></g><g className="c3-axis c3-axis-y2" transform="translate(500,0)" style="visibility: hidden; opacity: 0;"><text className="c3-axis-y2-label" transform="rotate(-90)" x="0" dx="-0.5em" dy="-0.5em" style="text-anchor: end;"></text><g className="tick" transform="translate(0,167)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g className="tick" transform="translate(0,151)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g className="tick" transform="translate(0,134)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g className="tick" transform="translate(0,118)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g className="tick" transform="translate(0,101)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g className="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g className="tick" transform="translate(0,68)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g className="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g className="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g className="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g className="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path className="domain" d="M6,1H0V167H6"></path></g></g><g transform="translate(0.5,171.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-subchart)" className="c3-chart"><g className="c3-chart-bars"></g><g className="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip)" className="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect className="background" x="0" width="500" style="visibility: hidden; cursor: crosshair;"></rect><rect className="extent" x="0" width="0" style="cursor: move;"></rect><g className="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g className="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g className="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226334-clip-xaxis)" style="visibility: hidden; opacity: 0;"><g className="tick" transform="translate(5, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g className="tick" transform="translate(496, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><path className="domain" d="M0,6V0H500V6"></path></g></g><g transform="translate(0,171)" style="visibility: hidden;"></g><text className="c3-title" x="250" y="0"></text></svg><div className="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>' } }),
-                _react2.default.createElement(
-                  'div',
-                  { className: 'col-sm-6' },
-                  _react2.default.createElement('img', { src: './img/dashboard-3.png', alt: 'Placeholder graph', className: 'img-responsive' })
-                )
-              ),
-              _react2.default.createElement('hr', null),
-              _react2.default.createElement(
-                'h2',
-                { className: 'h4' },
-                'Infrastructure Capacity'
-              ),
-              _react2.default.createElement(
-                'div',
-                { className: 'row' },
-                _react2.default.createElement('div', { className: 'col-sm-6', dangerouslySetInnerHTML: { __html: '<div id="chart4" className="c3" style="max-height: 200px; position: relative;"><svg width="500" height="200" style="overflow: hidden;"><defs><clipPath id="c3-1489827226499-clip"><rect width="420" height="145"></rect></clipPath><clipPath id="c3-1489827226499-clip-xaxis"><rect x="-69" y="-5" width="90" height="170"></rect></clipPath><clipPath id="c3-1489827226499-clip-yaxis"><rect x="-71" y="-20" width="522" height="70"></rect></clipPath><clipPath id="c3-1489827226499-clip-grid"><rect width="420" height="145"></rect></clipPath><clipPath id="c3-1489827226499-clip-subchart"><rect width="420" height="164"></rect></clipPath></defs><g transform="translate(70.5,5.5)"><text className="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="210" y="72.5" style="opacity: 0;"></text><rect className="c3-zoom-rect" width="420" height="145" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip)" className="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip-grid)" className="c3-grid" style="visibility: visible;"><g className="c3-ygrids"><line className="c3-ygrid" x1="0" x2="0" y1="0" y2="145"></line><line className="c3-ygrid" x1="45" x2="45" y1="0" y2="145"></line><line className="c3-ygrid" x1="89" x2="89" y1="0" y2="145"></line><line className="c3-ygrid" x1="134" x2="134" y1="0" y2="145"></line><line className="c3-ygrid" x1="178" x2="178" y1="0" y2="145"></line><line className="c3-ygrid" x1="222" x2="222" y1="0" y2="145"></line><line className="c3-ygrid" x1="267" x2="267" y1="0" y2="145"></line><line className="c3-ygrid" x1="311" x2="311" y1="0" y2="145"></line><line className="c3-ygrid" x1="356" x2="356" y1="0" y2="145"></line><line className="c3-ygrid" x1="400" x2="400" y1="0" y2="145"></line></g><g className="c3-xgrid-focus"><line className="c3-xgrid-focus" x1="0" x2="420" y1="-10" y2="-10" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip)" className="c3-chart"><g className="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect className=" c3-event-rect c3-event-rect-0" x="0" y="1" width="420" height="36"></rect><rect className=" c3-event-rect c3-event-rect-1" x="0" y="37" width="420" height="36"></rect><rect className=" c3-event-rect c3-event-rect-2" x="0" y="73" width="420" height="36"></rect><rect className=" c3-event-rect c3-event-rect-3" x="0" y="109" width="420" height="36"></rect></g><g className="c3-chart-bars"><g className="c3-chart-bar c3-target c3-target-Virtual-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Virtual-Resources c3-bars c3-bars-Virtual-Resources" style="cursor: pointer;"><path className=" c3-shape c3-shape-0 c3-bar c3-bar-0" d="M 0,8.200000000000001 L110.99365750528541,8.200000000000001 L110.99365750528541,29.799999999999997 L0,29.799999999999997 z" style="stroke: rgb(0, 136, 206); fill: rgb(0, 136, 206); opacity: 1;"></path><path className=" c3-shape c3-shape-1 c3-bar c3-bar-1" d="M 0,44.2 L155.3911205073996,44.2 L155.3911205073996,65.8 L0,65.8 z" style="stroke: rgb(0, 136, 206); fill: rgb(0, 136, 206); opacity: 1;"></path><path className=" c3-shape c3-shape-2 c3-bar c3-bar-2" d="M 0,80.2 L79.91543340380551,80.2 L79.91543340380551,101.8 L0,101.8 z" style="stroke: rgb(0, 136, 206); fill: rgb(0, 136, 206); opacity: 1;"></path><path className=" c3-shape c3-shape-3 c3-bar c3-bar-3" d="M 0,116.2 L346.30021141649047,116.2 L346.30021141649047,137.8 L0,137.8 z" style="stroke: rgb(0, 136, 206); fill: rgb(0, 136, 206); opacity: 1;"></path></g></g><g className="c3-chart-bar c3-target c3-target-Physical-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Physical-Resources c3-bars c3-bars-Physical-Resources" style="cursor: pointer;"><path className=" c3-shape c3-shape-0 c3-bar c3-bar-0" d="M 110.99365750528541,8.200000000000001 L377.37843551797044,8.200000000000001 L377.37843551797044,29.799999999999997 L110.99365750528541,29.799999999999997 z" style="stroke: rgb(57, 165, 220); fill: rgb(57, 165, 220); opacity: 1;"></path><path className=" c3-shape c3-shape-1 c3-bar c3-bar-1" d="M 155.3911205073996,44.2 L332.98097251585625,44.2 L332.98097251585625,65.8 L155.3911205073996,65.8 z" style="stroke: rgb(57, 165, 220); fill: rgb(57, 165, 220); opacity: 1;"></path><path className=" c3-shape c3-shape-2 c3-bar c3-bar-2" d="M 79.91543340380551,80.2 L293.02325581395354,80.2 L293.02325581395354,101.8 L79.91543340380551,101.8 z" style="stroke: rgb(57, 165, 220); fill: rgb(57, 165, 220); opacity: 1;"></path><path className=" c3-shape c3-shape-3 c3-bar c3-bar-3" d="M 346.30021141649047,116.2 L381.8181818181818,116.2 L381.8181818181818,137.8 L346.30021141649047,137.8 z" style="stroke: rgb(57, 165, 220); fill: rgb(57, 165, 220); opacity: 1;"></path></g></g></g><g className="c3-chart-lines"><g className="c3-chart-line c3-target c3-target-Virtual-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Virtual-Resources c3-lines c3-lines-Virtual-Resources"></g><g className=" c3-shapes c3-shapes-Virtual-Resources c3-areas c3-areas-Virtual-Resources"></g><g className=" c3-selected-circles c3-selected-circles-Virtual-Resources"></g><g className=" c3-shapes c3-shapes-Virtual-Resources c3-circles c3-circles-Virtual-Resources" style="cursor: pointer;"></g></g><g className="c3-chart-line c3-target c3-target-Physical-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-shapes c3-shapes-Physical-Resources c3-lines c3-lines-Physical-Resources"></g><g className=" c3-shapes c3-shapes-Physical-Resources c3-areas c3-areas-Physical-Resources"></g><g className=" c3-selected-circles c3-selected-circles-Physical-Resources"></g><g className=" c3-shapes c3-shapes-Physical-Resources c3-circles c3-circles-Physical-Resources" style="cursor: pointer;"></g></g></g><g className="c3-chart-arcs" transform="translate(210,67.5)"><text className="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g className="c3-chart-texts"><g className="c3-chart-text c3-target c3-target-Virtual-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-Virtual-Resources"></g></g><g className="c3-chart-text c3-target c3-target-Physical-Resources" style="opacity: 1; pointer-events: none;"><g className=" c3-texts c3-texts-Physical-Resources"></g></g></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip-grid)" className="c3-grid c3-grid-lines"><g className="c3-xgrid-lines"></g><g className="c3-ygrid-lines"></g></g><g className="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip-xaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 1;"><text className="c3-axis-x-label" transform="rotate(-90)" x="0" dx="-0.5em" dy="1.2em" style="text-anchor: end;"></text><g className="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 1</tspan></text></g><g className="tick" transform="translate(0,37)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 2</tspan></text></g><g className="tick" transform="translate(0,73)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 3</tspan></text></g><g className="tick" transform="translate(0,109)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 4</tspan></text></g><path className="domain" d="M0,1H0V145H0"></path></g><g className="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip-yaxis)" transform="translate(0,145)" style="visibility: visible; opacity: 1;"><text className="c3-axis-y-label" transform="" x="420" dx="-0.5em" dy="-0.5em" style="text-anchor: end;"></text><g className="tick" transform="translate(0, 0)" style="opacity: 1;"><line y2="0" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">0%</tspan></text></g><g className="tick" transform="translate(45, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">10%</tspan></text></g><g className="tick" transform="translate(89, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">20%</tspan></text></g><g className="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">30%</tspan></text></g><g className="tick" transform="translate(178, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">40%</tspan></text></g><g className="tick" transform="translate(222, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">50%</tspan></text></g><g className="tick" transform="translate(267, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">60%</tspan></text></g><g className="tick" transform="translate(311, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">70%</tspan></text></g><g className="tick" transform="translate(356, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">80%</tspan></text></g><g className="tick" transform="translate(400, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle;"><tspan x="0" dy=".71em" dx="0">90%</tspan></text></g><path className="domain" d="M0,0V0H420V0"></path></g><g className="c3-axis c3-axis-y2" transform="translate(0,1)" style="visibility: hidden; opacity: 1;"><text className="c3-axis-y2-label" transform="" x="420" dx="-0.5em" dy="1.2em" style="text-anchor: end;"></text><g className="tick" transform="translate(0, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0</tspan></text></g><g className="tick" transform="translate(42, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.1</tspan></text></g><g className="tick" transform="translate(84, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.2</tspan></text></g><g className="tick" transform="translate(126, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.3</tspan></text></g><g className="tick" transform="translate(168, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.4</tspan></text></g><g className="tick" transform="translate(210, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.5</tspan></text></g><g className="tick" transform="translate(252, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.6</tspan></text></g><g className="tick" transform="translate(294, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.7</tspan></text></g><g className="tick" transform="translate(336, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.8</tspan></text></g><g className="tick" transform="translate(378, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">0.9</tspan></text></g><g className="tick" transform="translate(420, 0)" style="opacity: 1;"><line y2="-6" x2="0"></line><text y="-9" x="0" style="text-anchor: middle;"><tspan x="0" dy="0em">1</tspan></text></g><path className="domain" d="M0,-6V0H420V-6"></path></g></g><g transform="translate(30.5,5.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip-subchart)" className="c3-chart"><g className="c3-chart-bars"></g><g className="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/dashboard.html#c3-1489827226499-clip)" className="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect className="background" y="1" height="164" style="visibility: hidden; cursor: crosshair;"></rect><rect className="extent" y="0" height="0" style="cursor: move;"></rect><g className="resize n" transform="translate(0,0)" style="cursor: ns-resize; display: none;"><rect y="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g className="resize s" transform="translate(0,0)" style="cursor: ns-resize; display: none;"><rect y="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g className="c3-axis-x" transform="translate(0,0)" clip-path="" style="visibility: hidden; opacity: 1;"><g className="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 1</tspan></text></g><g className="tick" transform="translate(0,37)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 2</tspan></text></g><g className="tick" transform="translate(0,73)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 3</tspan></text></g><g className="tick" transform="translate(0,109)" style="opacity: 1;"><line x2="-6" y1="0" y2="0"></line><text x="-9" y="18" style="text-anchor: end; display: block;"><tspan x="-9" dy="3">Location 4</tspan></text></g><path className="domain" d="M0,1H0V145H0"></path></g></g><g transform="translate(0,180)"><g className=" c3-legend-item c3-legend-item-Virtual-Resources" style="visibility: visible; cursor: pointer;"><text x="144.0703125" y="9" style="pointer-events: none;">Virtual Resources</text><rect className="c3-legend-item-event" x="130.0703125" y="-5" width="119.484375" height="18" style="fill-opacity: 0;"></rect><line className="c3-legend-item-tile" x1="128.0703125" y1="4" x2="138.0703125" y2="4" stroke-width="10" style="stroke: rgb(0, 136, 206); pointer-events: none;"></line></g><g className=" c3-legend-item c3-legend-item-Physical-Resources" style="visibility: visible; cursor: pointer;"><text x="263.5546875" y="9" style="pointer-events: none;">Physical Resources</text><rect className="c3-legend-item-event" x="249.5546875" y="-5" width="120.375" height="18" style="fill-opacity: 0;"></rect><line className="c3-legend-item-tile" x1="247.5546875" y1="4" x2="257.5546875" y2="4" stroke-width="10" style="stroke: rgb(57, 165, 220); pointer-events: none;"></line></g></g><text className="c3-title" x="250" y="0"></text></svg><div className="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>' } }),
-                _react2.default.createElement(
-                  'div',
-                  { className: 'col-sm-6' },
-                  _react2.default.createElement(
-                    'table',
-                    { className: 'table' },
-                    _react2.default.createElement(
-                      'tbody',
-                      null,
-                      _react2.default.createElement(
-                        'tr',
-                        null,
-                        _react2.default.createElement(
-                          'th',
-                          null,
-                          'Status'
-                        ),
-                        _react2.default.createElement(
-                          'th',
-                          null,
-                          'Location Data'
-                        ),
-                        _react2.default.createElement(
-                          'th',
-                          null,
-                          'Hosts'
-                        )
-                      ),
-                      _react2.default.createElement(
-                        'tr',
-                        null,
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-success' },
-                            'New'
-                          )
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'strong',
-                            null,
-                            'Fusce leo massa'
-                          ),
-                          _react2.default.createElement('br', null),
-                          'Created March 05, 2014 08:34:36 AM'
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-default' },
-                            '11'
-                          )
-                        )
-                      ),
-                      _react2.default.createElement(
-                        'tr',
-                        null,
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-success' },
-                            'New'
-                          )
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'strong',
-                            null,
-                            'Iaculis at dapibus eget'
-                          ),
-                          _react2.default.createElement('br', null),
-                          'Created March 03, 2014 20:32:12 AM'
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-default' },
-                            '9'
-                          )
-                        )
-                      ),
-                      _react2.default.createElement(
-                        'tr',
-                        null,
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-default' },
-                            'Disabled'
-                          )
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'strong',
-                            null,
-                            'Dapibus nec metus'
-                          ),
-                          _react2.default.createElement('br', null),
-                          'Created March 03, 2014 19:11:56 AM'
-                        ),
-                        _react2.default.createElement(
-                          'td',
-                          null,
-                          _react2.default.createElement(
-                            'span',
-                            { className: 'label label-default' },
-                            '25'
-                          )
-                        )
-                      )
-                    )
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    null,
-                    _react2.default.createElement(
-                      'a',
-                      { href: '#' },
-                      'See more \xBB'
-                    )
-                  )
-                )
-              )
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'col-sm-4 col-md-3 sidebar-pf sidebar-pf-right', style: { minHeight: 993 } },
-              _react2.default.createElement(
-                'div',
-                { className: 'sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right' },
-                _react2.default.createElement(
-                  'div',
-                  { className: 'actions pull-right' },
-                  _react2.default.createElement(
-                    'a',
-                    { href: '#' },
-                    'Clear Messages'
-                  )
-                ),
-                _react2.default.createElement(
-                  'h2',
-                  { className: 'h5' },
-                  'Latest Notifications'
-                )
-              ),
-              _react2.default.createElement(
-                'ul',
-                { className: 'list-group' },
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Duis eu augue lectus'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Donec id elit non mi porta gravida at eget metus.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Donec dictum odio eu turpis rutrum'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Etiam sit amet ultricies ligula.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'At egestas nibh dictum'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Maecenas vitae tempus mauris.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Phasellus dictum posuere ante sit'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Pellentesque rutrum justo in congue tristique.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Amet commodo'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Pellentesque in leo elit.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Nunc viverra purus libero'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Nulla lacinia lorem quis enim posuere dictum.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Non faucibus augue dapibus at'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Fusce id rutrum ante, eget vestibulum dolor'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Vivamus at semper'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Duis sagittis vitae neque at vehicula.'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'list-group-item' },
-                  _react2.default.createElement(
-                    'h3',
-                    { className: 'list-group-item-heading' },
-                    'Sed sit amet dolor'
-                  ),
-                  _react2.default.createElement(
-                    'p',
-                    { className: 'list-group-item-text' },
-                    'Donec id elit non mi porta gravida at eget metus.'
-                  )
-                )
-              ),
-              _react2.default.createElement(
-                'p',
-                null,
-                _react2.default.createElement(
-                  'a',
-                  { href: '#' },
-                  'See all messages'
-                )
-              )
-            )
-          )
-        ),
-        _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: '<script>\n        var c3ChartDefaults = $().c3ChartDefaults();\n\n        var chart = c3.generate({\n        axis: {\n          x: {\n            tick: {\n              format: \'%m-%d\',\n              outer: false\n            },\n            type: \'timeseries\'\n          },\n          y: {\n            tick: {\n              format: function(d) { return d + "%"; },\n              outer: false\n            }\n          }\n        },\n        bindto: \'#chart\',\n        color: c3ChartDefaults.getDefaultColors(),\n        data: {\n          columns: [\n            [\'x\', \'2015-04-01\', \'2015-04-02\', \'2015-04-03\', \'2015-04-04\', \'2015-04-05\', \'2015-04-06\', \'2015-04-07\'],\n            [\'data1\', 16, 44, 33, 88, 50, 76, 21]\n          ],\n          x: \'x\'\n        },\n        grid: {\n          y: {\n            show: true\n          }\n        },\n        legend: {\n          hide: true\n        },\n        point: {\n          r: 4\n        },\n        size: {\n          height: 220\n        }\n        });\n\n        var donutChartConfig = c3ChartDefaults.getDefaultDonutConfig(\'29,210 Host\');\n        donutChartConfig.bindto = \'#chart2\';\n        donutChartConfig.tooltip = {show: true};\n        donutChartConfig.data = {\n        colors: {\n          Cloud: \'#006e9c\',\n          Virtual: \'#00a8e1\',\n          Baremetal: \'#969696\'\n        },\n        columns: [\n          [\'Cloud\', 4,828],\n          [\'Virtual\', 13,258],\n          [\'Baremetal\', 11,1124]\n        ],\n        type : \'donut\',\n        onclick: function (d, i) { console.log("onclick", d, i); },\n        onmouseover: function (d, i) { console.log("onmouseover", d, i); },\n        onmouseout: function (d, i) { console.log("onmouseout", d, i); }\n        };\n        var chart2 = c3.generate(donutChartConfig);\n\n        var chart4 = c3.generate({\n        axis: {\n          rotated: true,\n          x: {\n            categories: [\'Location 1\', \'Location 2\', \'Location 3\', \'Location 4\'],\n            tick: {\n              outer: false\n            },\n            type: \'category\'\n          },\n          y: {\n            tick: {\n              format: function(d) { return d + "%"; },\n              outer: false\n            }\n          }\n        },\n        bindto: \'#chart4\',\n        color: c3ChartDefaults.getDefaultColors(),\n        data: {\n          columns: [\n            [\'Virtual Resources\', 25, 35, 18, 78],\n            [\'Physical Resources\', 60, 40, 48, 8]\n          ],\n          groups: [\n            [\'Virtual Resources\', \'Physical Resources\']\n          ],\n          type: \'bar\'\n        },\n        grid: {\n          y: {\n            show: true\n          }\n        },\n        size: {\n          height: 200\n        }\n        });\n        </script>' } })
+        _react2.default.createElement(_LeftNavigation2.default, null),
+        _react2.default.createElement('div', { className: 'container-fluid container-cards-pf container-pf-nav-pf-vertical', dangerouslySetInnerHTML: { __html: '<div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\n        <h2 class="card-pf-title" style="height: 17px;">\n          <span class="fa fa-shield"></span><span class="card-pf-aggregate-status-count">0</span> Ipsum\n        </h2>\n        <div class="card-pf-body" style="height: 50px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><a href="#" class="add" data-toggle="tooltip" data-placement="top" title="Add Ipsum"><span class="pficon pficon-add-circle-o"></span></a></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\n        <h2 class="card-pf-title" style="height: 17px;">\n          <a href="#"><span class="fa fa-shield"></span><span class="card-pf-aggregate-status-count">20</span> Amet</a>\n        </h2>\n        <div class="card-pf-body" style="height: 50px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><a href="#"><span class="pficon pficon-error-circle-o"></span>4</a></span>\n            <span class="card-pf-aggregate-status-notification"><a href="#"><span class="pficon pficon-warning-triangle-o"></span>1</a></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\n        <h2 class="card-pf-title" style="height: 17px;">\n          <a href="#"><span class="fa fa-shield"></span><span class="card-pf-aggregate-status-count">9</span> Adipiscing</a>\n        </h2>\n        <div class="card-pf-body" style="height: 50px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><span class="pficon pficon-ok"></span></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n                <div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\n                  <h2 class="card-pf-title" style="height: 17px;">\n                    <a href="#"><span class="fa fa-shield"></span><span class="card-pf-aggregate-status-count">12</span> Lorem</a>\n                  </h2>\n                  <div class="card-pf-body" style="height: 50px;">\n                    <p class="card-pf-aggregate-status-notifications">\n                      <a href="#"><span class="card-pf-aggregate-status-notification"><span class="pficon pficon-error-circle-o"></span>1</span></a>\n                    </p>\n                  </div>\n                </div>\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status card-pf-aggregate-status-mini" style="height: 59px;">\n        <h2 class="card-pf-title" style="height: 42px;">\n          <span class="fa fa-rebel"></span>\n          <span class="card-pf-aggregate-status-count">0</span> Ipsum\n        </h2>\n        <div class="card-pf-body" style="height: 24px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><a href="#" class="add" data-toggle="tooltip" data-placement="top" title="Add Ipsum"><span class="pficon pficon-add-circle-o"></span></a></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status card-pf-aggregate-status-mini" style="height: 59px;">\n        <h2 class="card-pf-title" style="height: 42px;">\n          <a href="#">\n            <span class="fa fa-paper-plane"></span>\n            <span class="card-pf-aggregate-status-count">20</span> Amet\n          </a>\n        </h2>\n        <div class="card-pf-body" style="height: 24px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><a href="#"><span class="pficon pficon-error-circle-o"></span>4</a></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n      <div class="card-pf card-pf-accented card-pf-aggregate-status card-pf-aggregate-status-mini" style="height: 59px;">\n        <h2 class="card-pf-title" style="height: 42px;">\n          <a href="#">\n            <span class="pficon pficon-cluster"></span>\n            <span class="card-pf-aggregate-status-count">9</span> Adipiscing\n          </a>\n        </h2>\n        <div class="card-pf-body" style="height: 24px;">\n          <p class="card-pf-aggregate-status-notifications">\n            <span class="card-pf-aggregate-status-notification"><span class="pficon pficon-ok"></span></span>\n          </p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-3">\n                <div class="card-pf card-pf-accented card-pf-aggregate-status card-pf-aggregate-status-mini" style="height: 59px;">\n                  <h2 class="card-pf-title" style="height: 42px;">\n                    <a href="#">\n                      <span class="pficon pficon-image"></span>\n                      <span class="card-pf-aggregate-status-count">12</span> Lorem\n                    </a>\n                  </h2>\n                  <div class="card-pf-body" style="height: 24px;">\n                    <p class="card-pf-aggregate-status-notifications">\n                      <a href="#"><span class="card-pf-aggregate-status-notification"><span class="pficon pficon-error-circle-o"></span>1</span></a>\n                    </p>\n                  </div>\n                </div>\n              </div>\n            </div>\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-12 col-sm-6">\n      <div class="card-pf" style="height: 360px;">\n        <div class="card-pf-heading">\n          <h2 class="card-pf-title" style="height: 17px;">\n            Top Utilized Clusters\n          </h2>\n        </div>\n        <div class="card-pf-body" style="height: 280px;">\n          <div class="progress-description">\n            RHOS6-Controller\n          </div>\n          <div class="progress progress-label-top-right">\n            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" style="width: 95%;" data-toggle="tooltip" title="95% Used">\n              <span><strong>190.0 of 200.0 GB</strong> Used</span>\n            </div>\n            <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%;" data-toggle="tooltip" title="5% Available">\n              <span class="sr-only">5% Available</span>\n            </div>\n          </div>\n          <div class="progress-description">\n            CFMEQE-Cluster\n          </div>\n          <div class="progress progress-label-top-right">\n            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;" data-toggle="tooltip" title="50% Used">\n              <span><strong>100.0 of 200.0 GB</strong> Used</span>\n            </div>\n            <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;" data-toggle="tooltip" title="50% Available">\n              <span class="sr-only">50% Available</span>\n            </div>\n          </div>\n          <div class="progress-description">\n            RHOS-Undercloud\n          </div>\n          <div class="progress progress-label-top-right">\n            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;" data-toggle="tooltip" title="70% Used">\n              <span><strong>140.0 of 200.0 GB</strong> Used</span>\n            </div>\n            <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;" data-toggle="tooltip" title="30% Available">\n              <span class="sr-only">30% Available</span>\n            </div>\n          </div>\n          <div class="progress-description">\n            RHEL6-Controller\n          </div>\n          <div class="progress progress-label-top-right">\n            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="76.5" aria-valuemin="0" aria-valuemax="100" style="width: 76.5%;" data-toggle="tooltip" title="76.5% Used">\n              <span><strong>153.0 of 200.0 GB</strong> Used</span>\n            </div>\n            <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="23.5" aria-valuemin="0" aria-valuemax="100" style="width: 23.5%;" data-toggle="tooltip" title="23.5% Available">\n              <span class="sr-only">23.5% Available</span>\n            </div>\n          </div>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6">\n      <div class="card-pf" style="height: 360px;">\n        <div class="card-pf-heading">\n          <h2 class="card-pf-title" style="height: 17px;">\n            Quotas\n          </h2>\n        </div>\n        <div class="card-pf-body" style="height: 280px;">\n          <div class="progress-container progress-description-left progress-label-right">\n            <div class="progress-description">\n              CPU\n            </div>\n            <div class="progress">\n              <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;" data-toggle="tooltip" title="25% Used">\n                <span><strong>115 of 460</strong> MHz</span>\n              </div>\n              <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;" data-toggle="tooltip" title="75% Available">\n                <span class="sr-only">75% Available</span>\n              </div>\n            </div>\n          </div>\n          <div class="progress-container progress-description-left progress-label-right">\n            <div class="progress-description">\n              Memory\n            </div>\n            <div class="progress">\n              <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;" data-toggle="tooltip" title="8 GB Used">\n                <span><strong>8 of 16</strong> GB</span>\n              </div>\n              <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;" data-toggle="tooltip" title="8 GB Available">\n                <span class="sr-only">50% Available</span>\n              </div>\n            </div>\n          </div>\n          <div class="progress-container progress-description-left progress-label-right">\n            <div class="progress-description">\n              Pods\n            </div>\n            <div class="progress">\n              <div class="progress-bar" role="progressbar" aria-valuenow="62.5" aria-valuemin="0" aria-valuemax="100" style="width: 62.5%;" data-toggle="tooltip" title="62.5% Used">\n                <span><strong>5 of 8</strong> Total</span>\n              </div>\n              <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="37.5" aria-valuemin="0" aria-valuemax="100" style="width: 37.5%;" data-toggle="tooltip" title="37.5% Available">\n                <span class="sr-only">37.5% Available</span>\n              </div>\n            </div>\n          </div>\n          <div class="progress-container progress-description-left progress-label-right">\n            <div class="progress-description">\n              Services\n            </div>\n            <div class="progress">\n              <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;" data-toggle="tooltip" title="100% Used">\n                <span><strong>2 of 2</strong> Total</span>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n              <div class="col-md-12">\n      <div class="card-pf card-pf-utilization" style="">\n        <div class="card-pf-heading">\n          <p class="card-pf-heading-details">Last 30 days</p>\n          <h2 class="card-pf-title" style="">\n            Utilization\n          </h2>\n        </div>\n        <div class="card-pf-body" style="">\n          <div class="row">\n            <div class="col-xs-12 col-sm-4 col-md-4">\n              <h3 class="card-pf-subtitle">CPU</h3>\n              <p class="card-pf-utilization-details">\n                <span class="card-pf-utilization-card-details-count">50</span>\n                  <span class="card-pf-utilization-card-details-description">\n                    <span class="card-pf-utilization-card-details-line-1">Available</span>\n                    <span class="card-pf-utilization-card-details-line-2">of 1000 MHz</span>\n                  </span>\n              </p>\n              <div id="chart-pf-donut-1" class="c3" style="max-height: 171px; position: relative;"><svg width="346.65625" height="171" style="overflow: hidden;"><defs><clipPath id="c3-1489832337484-clip"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832337484-clip-xaxis"><rect x="-31" y="-20" width="408.65625" height="20"></rect></clipPath><clipPath id="c3-1489832337484-clip-yaxis"><rect x="-29" y="-4" width="20" height="191"></rect></clipPath><clipPath id="c3-1489832337484-clip-grid"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832337484-clip-subchart"><rect width="346.65625"></rect></clipPath></defs><g transform="translate(0.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="173.328125" y="83.5" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="346.65625" height="167" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip)" class="c3-regions" style="visibility: hidden;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-grid)" class="c3-grid" style="visibility: hidden;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="167" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="0.671875" y="0" width="346.65625" height="167"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-bars c3-bars-Used" style="cursor: pointer;"></g></g><g class="c3-chart-bar c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-bars c3-bars-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-lines c3-lines-Used"></g><g class=" c3-shapes c3-shapes-Used c3-areas c3-areas-Used"></g><g class=" c3-selected-circles c3-selected-circles-Used"></g><g class=" c3-shapes c3-shapes-Used c3-circles c3-circles-Used" style="cursor: pointer;"></g></g><g class="c3-chart-line c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-lines c3-lines-Available"></g><g class=" c3-shapes c3-shapes-Available c3-areas c3-areas-Available"></g><g class=" c3-selected-circles c3-selected-circles-Available"></g><g class=" c3-shapes c3-shapes-Available c3-circles c3-circles-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-arcs" transform="translate(173.328125,78.5)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 1;"><tspan class="donut-title-big-pf" dy="0" x="0">950</tspan><tspan class="donut-title-small-pf" dy="20" x="0">MHz Used</tspan></text><g class="c3-chart-arc c3-target c3-target-Used"><g class=" c3-shapes c3-shapes-Used c3-arcs c3-arcs-Used"><path class=" c3-shape c3-shape c3-arc c3-arc-Used" transform="scale(1,1)" style="fill: rgb(204, 0, 0); cursor: pointer; opacity: 1;" d="M4.566401752320694e-15,-74.575A74.575,74.575 0 1,1 -23.044942355511655,-70.92503970271109L-19.64575541738724,-60.4634180234644A63.575,63.575 0 1,0 3.892846012789649e-15,-63.575Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(8.07602702924255,50.99002788843687)"></text></g><g class="c3-chart-arc c3-target c3-target-Available"><g class=" c3-shapes c3-shapes-Available c3-arcs c3-arcs-Available"><path class=" c3-shape c3-shape c3-arc c3-arc-Available" transform="scale(1,1)" style="fill: rgb(209, 209, 209); cursor: pointer; opacity: 1;" d="M-23.044942355511655,-70.92503970271109A74.575,74.575 0 0,1 5.2536700392174756e-14,-74.575L4.4787404994066514e-14,-63.575A63.575,63.575 0 0,0 -19.64575541738724,-60.4634180234644Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(-8.076027029242534,-50.99002788843687)"></text></g></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Used"></g></g><g class="c3-chart-text c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Available"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-xaxis)" transform="translate(0,167)" style="visibility: visible; opacity: 0;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="346.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 0;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,161)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,146)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,131)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,115)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,100)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,69)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,54)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,38)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,23)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><g class="tick" transform="translate(0,8)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">100</tspan></text></g><path class="domain" d="M-6,1H0V167H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(346.65625,0)" style="visibility: hidden; opacity: 0;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,167)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,151)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,134)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,118)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,101)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,68)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V167H6"></path></g></g><g transform="translate(0.5,171.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="346.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337484-clip-xaxis)" style="visibility: hidden; opacity: 0;"><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g></g><g transform="translate(0,171)" style="visibility: hidden;"></g><text class="c3-title" x="173.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <div class="chart-pf-sparkline c3" id="chart-pf-sparkline-1" style="max-height: 60px; position: relative;"><svg width="356.65625" height="60" style="overflow: hidden;"><defs><clipPath id="c3-1489832337693-clip"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832337693-clip-xaxis"><rect x="-31" y="-20" width="415.65625" height="28"></rect></clipPath><clipPath id="c3-1489832337693-clip-yaxis"><rect x="-29" y="-4" width="21" height="72"></rect></clipPath><clipPath id="c3-1489832337693-clip-grid"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832337693-clip-subchart"><rect width="353.65625"></rect></clipPath></defs><g transform="translate(1.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="176.828125" y="24" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="353.65625" height="48" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip)" class="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-grid)" class="c3-grid" style="visibility: visible;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="48" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="-6.4016544117647065" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-1" x="15.598345588235293" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-2" x="36.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-3" x="58.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-4" x="80.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-5" x="101.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-6" x="123.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-7" x="145.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-8" x="166.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-9" x="188.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-10" x="210.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-11" x="231.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-12" x="253.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-13" x="275.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-14" x="296.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-15" x="318.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-16" x="340.5983455882353" y="0" width="20.803308823529413" height="48"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-bars c3-bars--" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-lines c3-lines--"><path class=" c3-shape c3-shape c3-line c3-line--" style="stroke: rgb(0, 136, 206); opacity: 1;" d="M4,43.50239234449761L26,25.511961722488035L47,35.4066985645933L69,39.004784688995215L91,34.057416267942585L112,35.856459330143544L134,21.014354066985643L156,31.808612440191386L177,24.612440191387563L199,23.263157894736842L221,20.114832535885167L242,17.416267942583733L264,16.966507177033495L286,8.421052631578949L307,14.717703349282296L329,8.421052631578949L351,5.272727272727274"></path></g><g class=" c3-shapes c3-shapes-- c3-areas c3-areas--"><path class=" c3-shape c3-shape c3-area c3-area--" style="fill: rgb(0, 136, 206); opacity: 0.2;" d="M4,43.50239234449761L26,25.511961722488035L47,35.4066985645933L69,39.004784688995215L91,34.057416267942585L112,35.856459330143544L134,21.014354066985643L156,31.808612440191386L177,24.612440191387563L199,23.263157894736842L221,20.114832535885167L242,17.416267942583733L264,16.966507177033495L286,8.421052631578949L307,14.717703349282296L329,8.421052631578949L351,5.272727272727274L351,48L329,48L307,48L286,48L264,48L242,48L221,48L199,48L177,48L156,48L134,48L112,48L91,48L69,48L47,48L26,48L4,48Z"></path></g><g class=" c3-selected-circles c3-selected-circles--"></g><g class=" c3-shapes c3-shapes-- c3-circles c3-circles--" style="cursor: pointer;"><circle class=" c3-shape c3-shape-0 c3-circle c3-circle-0" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="4" cy="43.50239234449761"></circle><circle class=" c3-shape c3-shape-1 c3-circle c3-circle-1" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="26" cy="25.511961722488035"></circle><circle class=" c3-shape c3-shape-2 c3-circle c3-circle-2" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="47" cy="35.4066985645933"></circle><circle class=" c3-shape c3-shape-3 c3-circle c3-circle-3" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="69" cy="39.004784688995215"></circle><circle class=" c3-shape c3-shape-4 c3-circle c3-circle-4" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="91" cy="34.057416267942585"></circle><circle class=" c3-shape c3-shape-5 c3-circle c3-circle-5" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="112" cy="35.856459330143544"></circle><circle class=" c3-shape c3-shape-6 c3-circle c3-circle-6" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="134" cy="21.014354066985643"></circle><circle class=" c3-shape c3-shape-7 c3-circle c3-circle-7" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="156" cy="31.808612440191386"></circle><circle class=" c3-shape c3-shape-8 c3-circle c3-circle-8" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="177" cy="24.612440191387563"></circle><circle class=" c3-shape c3-shape-9 c3-circle c3-circle-9" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="199" cy="23.263157894736842"></circle><circle class=" c3-shape c3-shape-10 c3-circle c3-circle-10" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="221" cy="20.114832535885167"></circle><circle class=" c3-shape c3-shape-11 c3-circle c3-circle-11" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="242" cy="17.416267942583733"></circle><circle class=" c3-shape c3-shape-12 c3-circle c3-circle-12" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="264" cy="16.966507177033495"></circle><circle class=" c3-shape c3-shape-13 c3-circle c3-circle-13" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="286" cy="8.421052631578949"></circle><circle class=" c3-shape c3-shape-14 c3-circle c3-circle-14" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="307" cy="14.717703349282296"></circle><circle class=" c3-shape c3-shape-15 c3-circle c3-circle-15" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="329" cy="8.421052631578949"></circle><circle class=" c3-shape c3-shape-16 c3-circle c3-circle-16" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="351" cy="5.272727272727274"></circle></g></g></g><g class="c3-chart-arcs" transform="translate(176.828125,19)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts--"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-xaxis)" transform="translate(0,48)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="353.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-yaxis)" transform="translate(0,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,40)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,31)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,26)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,22)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,17)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,13)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,8)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><g class="tick" transform="translate(0,4)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">100</tspan></text></g><path class="domain" d="M-6,1H0V48H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(353.65625,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,30)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,20)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,16)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,11)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V48H6"></path></g></g><g transform="translate(1.5,60.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="353.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832337693-clip-xaxis)" style="visibility: hidden; opacity: 1;"><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g></g><g transform="translate(0,60)" style="visibility: hidden;"></g><text class="c3-title" x="178.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <script>\n                var donutConfig = $().c3ChartDefaults().getDefaultDonutConfig(\'A\');\n                donutConfig.bindto = \'#chart-pf-donut-1\';\n                donutConfig.color =  {\n                  pattern: ["#cc0000","#D1D1D1"]\n                };\n                donutConfig.data = {\n                  type: "donut",\n                  columns: [\n                    ["Used", 95],\n                    ["Available", 5]\n                  ],\n                  groups: [\n                    ["used", "available"]\n                  ],\n                  order: null\n                };\n                donutConfig.tooltip = {\n                  contents: function (d) {\n                    return \'<span class="donut-tooltip-pf" style="white-space: nowrap;">\' +\n                            Math.round(d[0].ratio * 100) + \'%\' + \' MHz \' + d[0].name +\n                            \'</span>\';\n                  }\n                };\n\n                var chart1 = c3.generate(donutConfig);\n                var donutChartTitle = d3.select("#chart-pf-donut-1").select(\'text.c3-chart-arcs-title\');\n                donutChartTitle.text("");\n                donutChartTitle.insert(\'tspan\').text("950").classed(\'donut-title-big-pf\', true).attr(\'dy\', 0).attr(\'x\', 0);\n                donutChartTitle.insert(\'tspan\').text("MHz Used").classed(\'donut-title-small-pf\', true).attr(\'dy\', 20).attr(\'x\', 0);\n\n                var sparklineConfig = $().c3ChartDefaults().getDefaultSparklineConfig();\n                sparklineConfig.bindto = \'#chart-pf-sparkline-1\';\n                sparklineConfig.data = {\n                  columns: [\n                    [\'%\', 10, 50, 28, 20, 31, 27, 60, 36, 52, 55, 62, 68, 69, 88, 74, 88, 95],\n                  ],\n                  type: \'area\'\n                };\n                var chart2 = c3.generate(sparklineConfig);\n              </script>\n            </div>\n            <div class="col-xs-12 col-sm-4 col-md-4">\n              <h3 class="card-pf-subtitle">Memory</h3>\n              <p class="card-pf-utilization-details">\n                <span class="card-pf-utilization-card-details-count">256</span>\n                  <span class="card-pf-utilization-card-details-description">\n                    <span class="card-pf-utilization-card-details-line-1">Available</span>\n                    <span class="card-pf-utilization-card-details-line-2">of 432 GB</span>\n                  </span>\n              </p>\n              <div id="chart-pf-donut-2" class="c3" style="max-height: 171px; position: relative;"><svg width="346.65625" height="171" style="overflow: hidden;"><defs><clipPath id="c3-1489832338983-clip"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832338983-clip-xaxis"><rect x="-31" y="-20" width="408.65625" height="20"></rect></clipPath><clipPath id="c3-1489832338983-clip-yaxis"><rect x="-29" y="-4" width="20" height="191"></rect></clipPath><clipPath id="c3-1489832338983-clip-grid"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832338983-clip-subchart"><rect width="346.65625"></rect></clipPath></defs><g transform="translate(0.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="173.328125" y="83.5" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="346.65625" height="167" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip)" class="c3-regions" style="visibility: hidden;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-grid)" class="c3-grid" style="visibility: hidden;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="167" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="0.671875" y="0" width="346.65625" height="167"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-bars c3-bars-Used" style="cursor: pointer;"></g></g><g class="c3-chart-bar c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-bars c3-bars-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-lines c3-lines-Used"></g><g class=" c3-shapes c3-shapes-Used c3-areas c3-areas-Used"></g><g class=" c3-selected-circles c3-selected-circles-Used"></g><g class=" c3-shapes c3-shapes-Used c3-circles c3-circles-Used" style="cursor: pointer;"></g></g><g class="c3-chart-line c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-lines c3-lines-Available"></g><g class=" c3-shapes c3-shapes-Available c3-areas c3-areas-Available"></g><g class=" c3-selected-circles c3-selected-circles-Available"></g><g class=" c3-shapes c3-shapes-Available c3-circles c3-circles-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-arcs" transform="translate(173.328125,78.5)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 1;"><tspan class="donut-title-big-pf" dy="0" x="0">176</tspan><tspan class="donut-title-small-pf" dy="20" x="0">GB Used</tspan></text><g class="c3-chart-arc c3-target c3-target-Used"><g class=" c3-shapes c3-shapes-Used c3-arcs c3-arcs-Used"><path class=" c3-shape c3-shape c3-arc c3-arc-Used" transform="scale(1,1)" style="fill: rgb(63, 156, 53); cursor: pointer; opacity: 1;" d="M4.566401752320694e-15,-74.575A74.575,74.575 0 0,1 39.95928323555867,62.96575504431278L34.06518849078971,53.67814786379061A63.575,63.575 0 0,0 3.892846012789649e-15,-63.575Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(49.57576170662574,-14.403090218716486)"></text></g><g class="c3-chart-arc c3-target c3-target-Available"><g class=" c3-shapes c3-shapes-Available c3-arcs c3-arcs-Available"><path class=" c3-shape c3-shape c3-arc c3-arc-Available" transform="scale(1,1)" style="fill: rgb(209, 209, 209); cursor: pointer; opacity: 1;" d="M39.95928323555867,62.96575504431278A74.575,74.575 0 1,1 -1.369920525696208e-14,-74.575L-1.1678538038368947e-14,-63.575A63.575,63.575 0 1,0 34.06518849078971,53.67814786379061Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(-49.575761706625734,14.403090218716502)"></text></g></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Used"></g></g><g class="c3-chart-text c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Available"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-xaxis)" transform="translate(0,167)" style="visibility: visible; opacity: 0;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="346.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 0;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,161)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,146)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">42</tspan></text></g><g class="tick" transform="translate(0,131)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">44</tspan></text></g><g class="tick" transform="translate(0,115)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">46</tspan></text></g><g class="tick" transform="translate(0,100)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">48</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,69)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">52</tspan></text></g><g class="tick" transform="translate(0,54)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">54</tspan></text></g><g class="tick" transform="translate(0,38)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">56</tspan></text></g><g class="tick" transform="translate(0,23)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">58</tspan></text></g><g class="tick" transform="translate(0,8)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><path class="domain" d="M-6,1H0V167H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(346.65625,0)" style="visibility: hidden; opacity: 0;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,167)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,151)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,134)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,118)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,101)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,68)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V167H6"></path></g></g><g transform="translate(0.5,171.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="346.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832338983-clip-xaxis)" style="visibility: hidden; opacity: 0;"><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g></g><g transform="translate(0,171)" style="visibility: hidden;"></g><text class="c3-title" x="173.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <div class="chart-pf-sparkline c3" id="chart-pf-sparkline-2" style="max-height: 60px; position: relative;"><svg width="356.65625" height="60" style="overflow: hidden;"><defs><clipPath id="c3-1489832339144-clip"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832339144-clip-xaxis"><rect x="-31" y="-20" width="415.65625" height="28"></rect></clipPath><clipPath id="c3-1489832339144-clip-yaxis"><rect x="-29" y="-4" width="21" height="72"></rect></clipPath><clipPath id="c3-1489832339144-clip-grid"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832339144-clip-subchart"><rect width="353.65625"></rect></clipPath></defs><g transform="translate(1.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="176.828125" y="24" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="353.65625" height="48" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip)" class="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-grid)" class="c3-grid" style="visibility: visible;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="48" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="-6.4016544117647065" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-1" x="15.598345588235293" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-2" x="36.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-3" x="58.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-4" x="80.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-5" x="101.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-6" x="123.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-7" x="145.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-8" x="166.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-9" x="188.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-10" x="210.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-11" x="231.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-12" x="253.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-13" x="275.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-14" x="296.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-15" x="318.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-16" x="340.5983455882353" y="0" width="20.803308823529413" height="48"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-bars c3-bars--" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-lines c3-lines--"><path class=" c3-shape c3-shape c3-line c3-line--" style="stroke: rgb(0, 136, 206); opacity: 1;" d="M4,20.8099173553719L26,20.03305785123967L47,32.462809917355365L69,24.694214876033058L91,23.91735537190083L112,30.90909090909091L134,13.818181818181817L156,20.03305785123967L177,16.925619834710744L199,16.148760330578515L221,5.272727272727274L242,7.603305785123966L264,10.710743801652892L286,10.710743801652892L307,9.157024793388429L329,16.925619834710744L351,16.148760330578515"></path></g><g class=" c3-shapes c3-shapes-- c3-areas c3-areas--"><path class=" c3-shape c3-shape c3-area c3-area--" style="fill: rgb(0, 136, 206); opacity: 0.2;" d="M4,20.8099173553719L26,20.03305785123967L47,32.462809917355365L69,24.694214876033058L91,23.91735537190083L112,30.90909090909091L134,13.818181818181817L156,20.03305785123967L177,16.925619834710744L199,16.148760330578515L221,5.272727272727274L242,7.603305785123966L264,10.710743801652892L286,10.710743801652892L307,9.157024793388429L329,16.925619834710744L351,16.148760330578515L351,48L329,48L307,48L286,48L264,48L242,48L221,48L199,48L177,48L156,48L134,48L112,48L91,48L69,48L47,48L26,48L4,48Z"></path></g><g class=" c3-selected-circles c3-selected-circles--"></g><g class=" c3-shapes c3-shapes-- c3-circles c3-circles--" style="cursor: pointer;"><circle class=" c3-shape c3-shape-0 c3-circle c3-circle-0" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="4" cy="20.8099173553719"></circle><circle class=" c3-shape c3-shape-1 c3-circle c3-circle-1" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="26" cy="20.03305785123967"></circle><circle class=" c3-shape c3-shape-2 c3-circle c3-circle-2" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="47" cy="32.462809917355365"></circle><circle class=" c3-shape c3-shape-3 c3-circle c3-circle-3" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="69" cy="24.694214876033058"></circle><circle class=" c3-shape c3-shape-4 c3-circle c3-circle-4" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="91" cy="23.91735537190083"></circle><circle class=" c3-shape c3-shape-5 c3-circle c3-circle-5" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="112" cy="30.90909090909091"></circle><circle class=" c3-shape c3-shape-6 c3-circle c3-circle-6" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="134" cy="13.818181818181817"></circle><circle class=" c3-shape c3-shape-7 c3-circle c3-circle-7" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="156" cy="20.03305785123967"></circle><circle class=" c3-shape c3-shape-8 c3-circle c3-circle-8" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="177" cy="16.925619834710744"></circle><circle class=" c3-shape c3-shape-9 c3-circle c3-circle-9" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="199" cy="16.148760330578515"></circle><circle class=" c3-shape c3-shape-10 c3-circle c3-circle-10" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="221" cy="5.272727272727274"></circle><circle class=" c3-shape c3-shape-11 c3-circle c3-circle-11" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="242" cy="7.603305785123966"></circle><circle class=" c3-shape c3-shape-12 c3-circle c3-circle-12" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="264" cy="10.710743801652892"></circle><circle class=" c3-shape c3-shape-13 c3-circle c3-circle-13" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="286" cy="10.710743801652892"></circle><circle class=" c3-shape c3-shape-14 c3-circle c3-circle-14" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="307" cy="9.157024793388429"></circle><circle class=" c3-shape c3-shape-15 c3-circle c3-circle-15" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="329" cy="16.925619834710744"></circle><circle class=" c3-shape c3-shape-16 c3-circle c3-circle-16" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="351" cy="16.148760330578515"></circle></g></g></g><g class="c3-chart-arcs" transform="translate(176.828125,19)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts--"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-xaxis)" transform="translate(0,48)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="353.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-yaxis)" transform="translate(0,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,45)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">5</tspan></text></g><g class="tick" transform="translate(0,41)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,37)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">15</tspan></text></g><g class="tick" transform="translate(0,33)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,29)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">25</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,21)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">35</tspan></text></g><g class="tick" transform="translate(0,17)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,14)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">45</tspan></text></g><g class="tick" transform="translate(0,10)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">55</tspan></text></g><g class="tick" transform="translate(0,2)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><path class="domain" d="M-6,1H0V48H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(353.65625,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,30)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,20)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,16)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,11)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V48H6"></path></g></g><g transform="translate(1.5,60.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="353.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339144-clip-xaxis)" style="visibility: hidden; opacity: 1;"><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g></g><g transform="translate(0,60)" style="visibility: hidden;"></g><text class="c3-title" x="178.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <script>\n                var donutConfig = $().c3ChartDefaults().getDefaultDonutConfig(\'A\');\n                donutConfig.bindto = \'#chart-pf-donut-2\';\n                donutConfig.color =  {\n                  pattern: ["#3f9c35","#D1D1D1"]\n                };\n                donutConfig.data = {\n                  type: "donut",\n                  columns: [\n                    ["Used", 41],\n                    ["Available", 59]\n                  ],\n                  groups: [\n                    ["used", "available"]\n                  ],\n                  order: null\n                };\n                donutConfig.tooltip = {\n                  contents: function (d) {\n                    return \'<span class="donut-tooltip-pf" style="white-space: nowrap;">\' +\n                            Math.round(d[0].ratio * 100) + \'%\' + \' GB \' + d[0].name +\n                            \'</span>\';\n                  }\n                };\n\n                var chart3 = c3.generate(donutConfig);\n                var donutChartTitle = d3.select("#chart-pf-donut-2").select(\'text.c3-chart-arcs-title\');\n                donutChartTitle.text("");\n                donutChartTitle.insert(\'tspan\').text("176").classed(\'donut-title-big-pf\', true).attr(\'dy\', 0).attr(\'x\', 0);\n                donutChartTitle.insert(\'tspan\').text("GB Used").classed(\'donut-title-small-pf\', true).attr(\'dy\', 20).attr(\'x\', 0);\n\n                var sparklineConfig = $().c3ChartDefaults().getDefaultSparklineConfig();\n                sparklineConfig.bindto = \'#chart-pf-sparkline-2\';\n                sparklineConfig.data = {\n                  columns: [\n                    [\'%\', 35, 36, 20, 30, 31, 22, 44, 36, 40, 41, 55, 52, 48, 48, 50, 40, 41],\n                  ],\n                  type: \'area\'\n                };\n                var chart4 = c3.generate(sparklineConfig);\n              </script>\n            </div>\n            <div class="col-xs-12 col-sm-4 col-md-4">\n              <h3 class="card-pf-subtitle">Network</h3>\n              <p class="card-pf-utilization-details">\n                <span class="card-pf-utilization-card-details-count">200</span>\n                  <span class="card-pf-utilization-card-details-description">\n                    <span class="card-pf-utilization-card-details-line-1">Available</span>\n                    <span class="card-pf-utilization-card-details-line-2">of 1300 Gbps</span>\n                  </span>\n              </p>\n              <div id="chart-pf-donut-3" class="c3" style="max-height: 171px; position: relative;"><svg width="346.65625" height="171" style="overflow: hidden;"><defs><clipPath id="c3-1489832339230-clip"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832339230-clip-xaxis"><rect x="-31" y="-20" width="408.65625" height="20"></rect></clipPath><clipPath id="c3-1489832339230-clip-yaxis"><rect x="-29" y="-4" width="20" height="191"></rect></clipPath><clipPath id="c3-1489832339230-clip-grid"><rect width="346.65625" height="167"></rect></clipPath><clipPath id="c3-1489832339230-clip-subchart"><rect width="346.65625"></rect></clipPath></defs><g transform="translate(0.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="173.328125" y="83.5" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="346.65625" height="167" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip)" class="c3-regions" style="visibility: hidden;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-grid)" class="c3-grid" style="visibility: hidden;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="167" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="0.671875" y="0" width="346.65625" height="167"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-bars c3-bars-Used" style="cursor: pointer;"></g></g><g class="c3-chart-bar c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-bars c3-bars-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-lines c3-lines-Used"></g><g class=" c3-shapes c3-shapes-Used c3-areas c3-areas-Used"></g><g class=" c3-selected-circles c3-selected-circles-Used"></g><g class=" c3-shapes c3-shapes-Used c3-circles c3-circles-Used" style="cursor: pointer;"></g></g><g class="c3-chart-line c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-lines c3-lines-Available"></g><g class=" c3-shapes c3-shapes-Available c3-areas c3-areas-Available"></g><g class=" c3-selected-circles c3-selected-circles-Available"></g><g class=" c3-shapes c3-shapes-Available c3-circles c3-circles-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-arcs" transform="translate(173.328125,78.5)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 1;"><tspan class="donut-title-big-pf" dy="0" x="0">1100</tspan><tspan class="donut-title-small-pf" dy="20" x="0">Gbps Used</tspan></text><g class="c3-chart-arc c3-target c3-target-Used"><g class=" c3-shapes c3-shapes-Used c3-arcs c3-arcs-Used"><path class=" c3-shape c3-shape c3-arc c3-arc-Used" transform="scale(1,1)" style="fill: rgb(236, 122, 8); cursor: pointer; opacity: 1;" d="M4.566401752320694e-15,-74.575A74.575,74.575 0 1,1 -60.332442355511674,-43.834085189711224L-51.43325541738726,-37.368447414494014A63.575,63.575 0 1,0 3.892846012789649e-15,-63.575Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(23.437543293116423,45.99876869030212)"></text></g><g class="c3-chart-arc c3-target c3-target-Available"><g class=" c3-shapes c3-shapes-Available c3-arcs c3-arcs-Available"><path class=" c3-shape c3-shape c3-arc c3-arc-Available" transform="scale(1,1)" style="fill: rgb(209, 209, 209); cursor: pointer; opacity: 1;" d="M-60.332442355511674,-43.834085189711224A74.575,74.575 0 0,1 5.2536700392174756e-14,-74.575L4.4787404994066514e-14,-63.575A63.575,63.575 0 0,0 -51.43325541738726,-37.368447414494014Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(-23.43754329311641,-45.998768690302136)"></text></g></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Used"></g></g><g class="c3-chart-text c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Available"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-xaxis)" transform="translate(0,167)" style="visibility: visible; opacity: 0;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="346.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 0;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,164)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,144)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,124)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,104)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,65)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,45)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,5)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><path class="domain" d="M-6,1H0V167H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(346.65625,0)" style="visibility: hidden; opacity: 0;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,167)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,151)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,134)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,118)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,101)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,68)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V167H6"></path></g></g><g transform="translate(0.5,171.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="346.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339230-clip-xaxis)" style="visibility: hidden; opacity: 0;"><g class="tick" transform="translate(174, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H346.65625V6"></path></g></g><g transform="translate(0,171)" style="visibility: hidden;"></g><text class="c3-title" x="173.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <div class="chart-pf-sparkline c3" id="chart-pf-sparkline-3" style="max-height: 60px; position: relative;"><svg width="356.65625" height="60" style="overflow: hidden;"><defs><clipPath id="c3-1489832339319-clip"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832339319-clip-xaxis"><rect x="-31" y="-20" width="415.65625" height="28"></rect></clipPath><clipPath id="c3-1489832339319-clip-yaxis"><rect x="-29" y="-4" width="21" height="72"></rect></clipPath><clipPath id="c3-1489832339319-clip-grid"><rect width="353.65625" height="48"></rect></clipPath><clipPath id="c3-1489832339319-clip-subchart"><rect width="353.65625"></rect></clipPath></defs><g transform="translate(1.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="176.828125" y="24" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="353.65625" height="48" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip)" class="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-grid)" class="c3-grid" style="visibility: visible;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="48" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="-6.4016544117647065" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-1" x="15.598345588235293" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-2" x="36.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-3" x="58.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-4" x="80.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-5" x="101.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-6" x="123.59834558823529" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-7" x="145.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-8" x="166.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-9" x="188.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-10" x="210.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-11" x="231.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-12" x="253.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-13" x="275.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-14" x="296.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-15" x="318.5983455882353" y="0" width="20.803308823529413" height="48"></rect><rect class=" c3-event-rect c3-event-rect-16" x="340.5983455882353" y="0" width="20.803308823529413" height="48"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-bars c3-bars--" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-lines c3-lines--"><path class=" c3-shape c3-shape c3-line c3-line--" style="stroke: rgb(0, 136, 206); opacity: 1;" d="M4,18.86776859504132L26,21.295454545454543L47,14.012396694214875L69,26.636363636363633L91,32.94834710743802L112,15.469008264462811L134,21.78099173553719L156,25.665289256198342L177,19.838842975206614L199,11.58471074380165L221,17.896694214876035L242,14.983471074380166L264,14.49793388429752L286,5.272727272727269L307,12.070247933884296L329,5.272727272727269L351,6.7293388429752055"></path></g><g class=" c3-shapes c3-shapes-- c3-areas c3-areas--"><path class=" c3-shape c3-shape c3-area c3-area--" style="fill: rgb(0, 136, 206); opacity: 0.2;" d="M4,18.86776859504132L26,21.295454545454543L47,14.012396694214875L69,26.636363636363633L91,32.94834710743802L112,15.469008264462811L134,21.78099173553719L156,25.665289256198342L177,19.838842975206614L199,11.58471074380165L221,17.896694214876035L242,14.983471074380166L264,14.49793388429752L286,5.272727272727269L307,12.070247933884296L329,5.272727272727269L351,6.7293388429752055L351,48L329,48L307,48L286,48L264,48L242,48L221,48L199,48L177,48L156,48L134,48L112,48L91,48L69,48L47,48L26,48L4,48Z"></path></g><g class=" c3-selected-circles c3-selected-circles--"></g><g class=" c3-shapes c3-shapes-- c3-circles c3-circles--" style="cursor: pointer;"><circle class=" c3-shape c3-shape-0 c3-circle c3-circle-0" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="4" cy="18.86776859504132"></circle><circle class=" c3-shape c3-shape-1 c3-circle c3-circle-1" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="26" cy="21.295454545454543"></circle><circle class=" c3-shape c3-shape-2 c3-circle c3-circle-2" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="47" cy="14.012396694214875"></circle><circle class=" c3-shape c3-shape-3 c3-circle c3-circle-3" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="69" cy="26.636363636363633"></circle><circle class=" c3-shape c3-shape-4 c3-circle c3-circle-4" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="91" cy="32.94834710743802"></circle><circle class=" c3-shape c3-shape-5 c3-circle c3-circle-5" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="112" cy="15.469008264462811"></circle><circle class=" c3-shape c3-shape-6 c3-circle c3-circle-6" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="134" cy="21.78099173553719"></circle><circle class=" c3-shape c3-shape-7 c3-circle c3-circle-7" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="156" cy="25.665289256198342"></circle><circle class=" c3-shape c3-shape-8 c3-circle c3-circle-8" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="177" cy="19.838842975206614"></circle><circle class=" c3-shape c3-shape-9 c3-circle c3-circle-9" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="199" cy="11.58471074380165"></circle><circle class=" c3-shape c3-shape-10 c3-circle c3-circle-10" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="221" cy="17.896694214876035"></circle><circle class=" c3-shape c3-shape-11 c3-circle c3-circle-11" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="242" cy="14.983471074380166"></circle><circle class=" c3-shape c3-shape-12 c3-circle c3-circle-12" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="264" cy="14.49793388429752"></circle><circle class=" c3-shape c3-shape-13 c3-circle c3-circle-13" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="286" cy="5.272727272727269"></circle><circle class=" c3-shape c3-shape-14 c3-circle c3-circle-14" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="307" cy="12.070247933884296"></circle><circle class=" c3-shape c3-shape-15 c3-circle c3-circle-15" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="329" cy="5.272727272727269"></circle><circle class=" c3-shape c3-shape-16 c3-circle c3-circle-16" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="351" cy="6.7293388429752055"></circle></g></g></g><g class="c3-chart-arcs" transform="translate(176.828125,19)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts--"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-xaxis)" transform="translate(0,48)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="353.65625" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-yaxis)" transform="translate(0,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,29)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,24)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,19)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,15)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,10)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,5)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><path class="domain" d="M-6,1H0V48H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(353.65625,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,30)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,20)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,16)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,11)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V48H6"></path></g></g><g transform="translate(1.5,60.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="353.65625" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832339319-clip-xaxis)" style="visibility: hidden; opacity: 1;"><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(26, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(47, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(69, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(91, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(112, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(134, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(156, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(177, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(199, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(221, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(242, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(264, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(286, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(307, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(329, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(351, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H353.65625V6"></path></g></g><g transform="translate(0,60)" style="visibility: hidden;"></g><text class="c3-title" x="178.328125" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n              <script>\n                var donutConfig = $().c3ChartDefaults().getDefaultDonutConfig(\'A\');\n                donutConfig.bindto = \'#chart-pf-donut-3\';\n                donutConfig.color =  {\n                  pattern: ["#EC7A08","#D1D1D1"]\n                };\n                donutConfig.data = {\n                  type: "donut",\n                  columns: [\n                    ["Used", 85],\n                    ["Available", 15]\n                  ],\n                  groups: [\n                    ["used", "available"]\n                  ],\n                  order: null\n                };\n                donutConfig.tooltip = {\n                  contents: function (d) {\n                    return \'<span class="donut-tooltip-pf" style="white-space: nowrap;">\' +\n                            Math.round(d[0].ratio * 100) + \'%\' + \' Gbps \' + d[0].name +\n                            \'</span>\';\n                  }\n                };\n\n                var chart5 = c3.generate(donutConfig);\n                var donutChartTitle = d3.select("#chart-pf-donut-3").select(\'text.c3-chart-arcs-title\');\n                donutChartTitle.text("");\n                donutChartTitle.insert(\'tspan\').text("1100").classed(\'donut-title-big-pf\', true).attr(\'dy\', 0).attr(\'x\', 0);\n                donutChartTitle.insert(\'tspan\').text("Gbps Used").classed(\'donut-title-small-pf\', true).attr(\'dy\', 20).attr(\'x\', 0);\n\n                var sparklineConfig = $().c3ChartDefaults().getDefaultSparklineConfig();\n                sparklineConfig.bindto = \'#chart-pf-sparkline-3\';\n                sparklineConfig.data = {\n                  columns: [\n                    [\'%\', 60, 55, 70, 44, 31, 67, 54, 46, 58, 75, 62, 68, 69, 88, 74, 88, 85],\n                  ],\n                  type: \'area\'\n                };\n                var chart6 = c3.generate(sparklineConfig);\n              </script>\n            </div>\n          </div>\n        </div>\n      </div>\n\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n              <div class="col-xs-12 col-sm-4 col-md-4">\n      <div class="card-pf card-pf-utilization" style="">\n        <h2 class="card-pf-title" style="">\n          Network\n        </h2>\n        <div class="card-pf-body" style="">\n          <p class="card-pf-utilization-details">\n            <span class="card-pf-utilization-card-details-count">200</span>\n              <span class="card-pf-utilization-card-details-description">\n                <span class="card-pf-utilization-card-details-line-1">Available</span>\n                <span class="card-pf-utilization-card-details-line-2">of 1300 Gbps</span>\n              </span>\n          </p>\n          <div id="chart-pf-donut-4" class="c3" style="max-height: 171px; position: relative;"><svg width="333.328125" height="171" style="overflow: hidden;"><defs><clipPath id="c3-1489832341266-clip"><rect width="333.328125" height="167"></rect></clipPath><clipPath id="c3-1489832341266-clip-xaxis"><rect x="-31" y="-20" width="395.328125" height="20"></rect></clipPath><clipPath id="c3-1489832341266-clip-yaxis"><rect x="-29" y="-4" width="20" height="191"></rect></clipPath><clipPath id="c3-1489832341266-clip-grid"><rect width="333.328125" height="167"></rect></clipPath><clipPath id="c3-1489832341266-clip-subchart"><rect width="333.328125"></rect></clipPath></defs><g transform="translate(0.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="166.6640625" y="83.5" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="333.328125" height="167" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip)" class="c3-regions" style="visibility: hidden;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-grid)" class="c3-grid" style="visibility: hidden;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="167" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="0.3359375" y="0" width="333.328125" height="167"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-bars c3-bars-Used" style="cursor: pointer;"></g></g><g class="c3-chart-bar c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-bars c3-bars-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Used c3-lines c3-lines-Used"></g><g class=" c3-shapes c3-shapes-Used c3-areas c3-areas-Used"></g><g class=" c3-selected-circles c3-selected-circles-Used"></g><g class=" c3-shapes c3-shapes-Used c3-circles c3-circles-Used" style="cursor: pointer;"></g></g><g class="c3-chart-line c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-Available c3-lines c3-lines-Available"></g><g class=" c3-shapes c3-shapes-Available c3-areas c3-areas-Available"></g><g class=" c3-selected-circles c3-selected-circles-Available"></g><g class=" c3-shapes c3-shapes-Available c3-circles c3-circles-Available" style="cursor: pointer;"></g></g></g><g class="c3-chart-arcs" transform="translate(166.6640625,78.5)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 1;"><tspan class="donut-title-big-pf" dy="0" x="0">1100</tspan><tspan class="donut-title-small-pf" dy="20" x="0">Gbps Used</tspan></text><g class="c3-chart-arc c3-target c3-target-Used"><g class=" c3-shapes c3-shapes-Used c3-arcs c3-arcs-Used"><path class=" c3-shape c3-shape c3-arc c3-arc-Used" transform="scale(1,1)" style="fill: rgb(236, 122, 8); cursor: pointer; opacity: 1;" d="M4.566401752320694e-15,-74.575A74.575,74.575 0 1,1 -60.332442355511674,-43.834085189711224L-51.43325541738726,-37.368447414494014A63.575,63.575 0 1,0 3.892846012789649e-15,-63.575Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(23.437543293116423,45.99876869030212)"></text></g><g class="c3-chart-arc c3-target c3-target-Available"><g class=" c3-shapes c3-shapes-Available c3-arcs c3-arcs-Available"><path class=" c3-shape c3-shape c3-arc c3-arc-Available" transform="scale(1,1)" style="fill: rgb(209, 209, 209); cursor: pointer; opacity: 1;" d="M-60.332442355511674,-43.834085189711224A74.575,74.575 0 0,1 5.2536700392174756e-14,-74.575L4.4787404994066514e-14,-63.575A63.575,63.575 0 0,0 -51.43325541738726,-37.368447414494014Z"></path></g><text dy=".35em" style="opacity: 1; text-anchor: middle; pointer-events: none;" class="" transform="translate(-23.43754329311641,-45.998768690302136)"></text></g></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target-Used" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Used"></g></g><g class="c3-chart-text c3-target c3-target-Available" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts-Available"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-xaxis)" transform="translate(0,167)" style="visibility: visible; opacity: 0;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="333.328125" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(167, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H333.328125V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-yaxis)" transform="translate(0,0)" style="visibility: visible; opacity: 0;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,164)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,144)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,124)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,104)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,65)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,45)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,5)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><path class="domain" d="M-6,1H0V167H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(333.328125,0)" style="visibility: hidden; opacity: 0;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,167)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,151)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,134)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,118)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,101)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,84)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,68)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,51)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,35)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,18)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V167H6"></path></g></g><g transform="translate(0.5,171.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="333.328125" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341266-clip-xaxis)" style="visibility: hidden; opacity: 0;"><g class="tick" transform="translate(167, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><path class="domain" d="M0,6V0H333.328125V6"></path></g></g><g transform="translate(0,171)" style="visibility: hidden;"></g><text class="c3-title" x="166.6640625" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n          <div class="chart-pf-sparkline c3" id="chart-pf-sparkline-4" style="max-height: 60px; position: relative;"><svg width="343.328125" height="60" style="overflow: hidden;"><defs><clipPath id="c3-1489832341325-clip"><rect width="340.328125" height="48"></rect></clipPath><clipPath id="c3-1489832341325-clip-xaxis"><rect x="-31" y="-20" width="402.328125" height="28"></rect></clipPath><clipPath id="c3-1489832341325-clip-yaxis"><rect x="-29" y="-4" width="21" height="72"></rect></clipPath><clipPath id="c3-1489832341325-clip-grid"><rect width="340.328125" height="48"></rect></clipPath><clipPath id="c3-1489832341325-clip-subchart"><rect width="340.328125"></rect></clipPath></defs><g transform="translate(1.5,4.5)"><text class="c3-text c3-empty" text-anchor="middle" dominant-baseline="middle" x="170.1640625" y="24" style="opacity: 0;"></text><rect class="c3-zoom-rect" width="340.328125" height="48" style="opacity: 0;"></rect><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip)" class="c3-regions" style="visibility: visible;"></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-grid)" class="c3-grid" style="visibility: visible;"><g class="c3-xgrid-focus"><line class="c3-xgrid-focus" x1="-10" x2="-10" y1="0" y2="48" style="visibility: hidden;"></line></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip)" class="c3-chart"><g class="c3-event-rects c3-event-rects-single" style="fill-opacity: 0;"><rect class=" c3-event-rect c3-event-rect-0" x="-6.009650735294118" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-1" x="14.990349264705882" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-2" x="35.990349264705884" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-3" x="55.990349264705884" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-4" x="76.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-5" x="97.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-6" x="118.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-7" x="139.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-8" x="160.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-9" x="181.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-10" x="201.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-11" x="222.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-12" x="243.99034926470588" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-13" x="264.99034926470586" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-14" x="285.99034926470586" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-15" x="306.99034926470586" y="0" width="20.019301470588236" height="48"></rect><rect class=" c3-event-rect c3-event-rect-16" x="326.99034926470586" y="0" width="20.019301470588236" height="48"></rect></g><g class="c3-chart-bars"><g class="c3-chart-bar c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-bars c3-bars--" style="cursor: pointer;"></g></g></g><g class="c3-chart-lines"><g class="c3-chart-line c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-shapes c3-shapes-- c3-lines c3-lines--"><path class=" c3-shape c3-shape c3-line c3-line--" style="stroke: rgb(0, 136, 206); opacity: 1;" d="M4,18.86776859504132L25,21.295454545454543L46,14.012396694214875L66,26.636363636363633L87,32.94834710743802L108,15.469008264462811L129,21.78099173553719L150,25.665289256198342L171,19.838842975206614L192,11.58471074380165L212,17.896694214876035L233,14.983471074380166L254,14.49793388429752L275,5.272727272727269L296,12.070247933884296L317,5.272727272727269L337,6.7293388429752055"></path></g><g class=" c3-shapes c3-shapes-- c3-areas c3-areas--"><path class=" c3-shape c3-shape c3-area c3-area--" style="fill: rgb(0, 136, 206); opacity: 0.2;" d="M4,18.86776859504132L25,21.295454545454543L46,14.012396694214875L66,26.636363636363633L87,32.94834710743802L108,15.469008264462811L129,21.78099173553719L150,25.665289256198342L171,19.838842975206614L192,11.58471074380165L212,17.896694214876035L233,14.983471074380166L254,14.49793388429752L275,5.272727272727269L296,12.070247933884296L317,5.272727272727269L337,6.7293388429752055L337,48L317,48L296,48L275,48L254,48L233,48L212,48L192,48L171,48L150,48L129,48L108,48L87,48L66,48L46,48L25,48L4,48Z"></path></g><g class=" c3-selected-circles c3-selected-circles--"></g><g class=" c3-shapes c3-shapes-- c3-circles c3-circles--" style="cursor: pointer;"><circle class=" c3-shape c3-shape-0 c3-circle c3-circle-0" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="4" cy="18.86776859504132"></circle><circle class=" c3-shape c3-shape-1 c3-circle c3-circle-1" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="25" cy="21.295454545454543"></circle><circle class=" c3-shape c3-shape-2 c3-circle c3-circle-2" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="46" cy="14.012396694214875"></circle><circle class=" c3-shape c3-shape-3 c3-circle c3-circle-3" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="66" cy="26.636363636363633"></circle><circle class=" c3-shape c3-shape-4 c3-circle c3-circle-4" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="87" cy="32.94834710743802"></circle><circle class=" c3-shape c3-shape-5 c3-circle c3-circle-5" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="108" cy="15.469008264462811"></circle><circle class=" c3-shape c3-shape-6 c3-circle c3-circle-6" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="129" cy="21.78099173553719"></circle><circle class=" c3-shape c3-shape-7 c3-circle c3-circle-7" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="150" cy="25.665289256198342"></circle><circle class=" c3-shape c3-shape-8 c3-circle c3-circle-8" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="171" cy="19.838842975206614"></circle><circle class=" c3-shape c3-shape-9 c3-circle c3-circle-9" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="192" cy="11.58471074380165"></circle><circle class=" c3-shape c3-shape-10 c3-circle c3-circle-10" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="212" cy="17.896694214876035"></circle><circle class=" c3-shape c3-shape-11 c3-circle c3-circle-11" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="233" cy="14.983471074380166"></circle><circle class=" c3-shape c3-shape-12 c3-circle c3-circle-12" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="254" cy="14.49793388429752"></circle><circle class=" c3-shape c3-shape-13 c3-circle c3-circle-13" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="275" cy="5.272727272727269"></circle><circle class=" c3-shape c3-shape-14 c3-circle c3-circle-14" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="296" cy="12.070247933884296"></circle><circle class=" c3-shape c3-shape-15 c3-circle c3-circle-15" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="317" cy="5.272727272727269"></circle><circle class=" c3-shape c3-shape-16 c3-circle c3-circle-16" r="1" style="fill: rgb(0, 136, 206); opacity: 1;" cx="337" cy="6.7293388429752055"></circle></g></g></g><g class="c3-chart-arcs" transform="translate(170.1640625,19)"><text class="c3-chart-arcs-title" style="text-anchor: middle; opacity: 0;"></text></g><g class="c3-chart-texts"><g class="c3-chart-text c3-target c3-target--" style="opacity: 1; pointer-events: none;"><g class=" c3-texts c3-texts--"></g></g></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-grid)" class="c3-grid c3-grid-lines"><g class="c3-xgrid-lines"></g><g class="c3-ygrid-lines"></g></g><g class="c3-axis c3-axis-x" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-xaxis)" transform="translate(0,48)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-x-label" transform="" style="text-anchor: end;" x="340.328125" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(25, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(46, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(66, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(87, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(108, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(129, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(150, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(171, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(192, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(212, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(233, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(254, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(275, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(296, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(317, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(337, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H340.328125V6"></path></g><g class="c3-axis c3-axis-y" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-yaxis)" transform="translate(0,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="1.2em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">10</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">20</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">30</tspan></text></g><g class="tick" transform="translate(0,29)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">40</tspan></text></g><g class="tick" transform="translate(0,24)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">50</tspan></text></g><g class="tick" transform="translate(0,19)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">60</tspan></text></g><g class="tick" transform="translate(0,15)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">70</tspan></text></g><g class="tick" transform="translate(0,10)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">80</tspan></text></g><g class="tick" transform="translate(0,5)" style="opacity: 1;"><line x2="-6"></line><text x="-9" y="0" style="text-anchor: end;"><tspan x="-9" dy="3">90</tspan></text></g><path class="domain" d="M-6,1H0V48H-6"></path></g><g class="c3-axis c3-axis-y2" transform="translate(340.328125,0)" style="visibility: hidden; opacity: 1;"><text class="c3-axis-y2-label" transform="rotate(-90)" style="text-anchor: end;" x="0" dx="-0.5em" dy="-0.5em"></text><g class="tick" transform="translate(0,48)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0</tspan></text></g><g class="tick" transform="translate(0,44)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.1</tspan></text></g><g class="tick" transform="translate(0,39)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.2</tspan></text></g><g class="tick" transform="translate(0,34)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.3</tspan></text></g><g class="tick" transform="translate(0,30)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.4</tspan></text></g><g class="tick" transform="translate(0,25)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.5</tspan></text></g><g class="tick" transform="translate(0,20)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.6</tspan></text></g><g class="tick" transform="translate(0,16)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.7</tspan></text></g><g class="tick" transform="translate(0,11)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.8</tspan></text></g><g class="tick" transform="translate(0,6)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">0.9</tspan></text></g><g class="tick" transform="translate(0,1)" style="opacity: 1;"><line x2="6" y2="0"></line><text x="9" y="0" style="text-anchor: start;"><tspan x="9" dy="3">1</tspan></text></g><path class="domain" d="M6,1H0V48H6"></path></g></g><g transform="translate(1.5,60.5)" style="visibility: hidden;"><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-subchart)" class="c3-chart"><g class="c3-chart-bars"></g><g class="c3-chart-lines"></g></g><g clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip)" class="c3-brush" style="pointer-events: all; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect class="background" x="0" width="340.328125" style="visibility: hidden; cursor: crosshair;"></rect><rect class="extent" x="0" width="0" style="cursor: move;"></rect><g class="resize e" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g><g class="resize w" transform="translate(0,0)" style="cursor: ew-resize; display: none;"><rect x="-3" width="6" height="6" style="visibility: hidden;"></rect></g></g><g class="c3-axis-x" transform="translate(0,0)" clip-path="url(http://localhost:9000/vertical-navigation-primary-only.html#c3-1489832341325-clip-xaxis)" style="visibility: hidden; opacity: 1;"><g class="tick" transform="translate(4, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">0</tspan></text></g><g class="tick" transform="translate(25, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">1</tspan></text></g><g class="tick" transform="translate(46, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">2</tspan></text></g><g class="tick" transform="translate(66, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">3</tspan></text></g><g class="tick" transform="translate(87, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">4</tspan></text></g><g class="tick" transform="translate(108, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">5</tspan></text></g><g class="tick" transform="translate(129, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">6</tspan></text></g><g class="tick" transform="translate(150, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">7</tspan></text></g><g class="tick" transform="translate(171, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">8</tspan></text></g><g class="tick" transform="translate(192, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">9</tspan></text></g><g class="tick" transform="translate(212, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">10</tspan></text></g><g class="tick" transform="translate(233, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">11</tspan></text></g><g class="tick" transform="translate(254, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">12</tspan></text></g><g class="tick" transform="translate(275, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">13</tspan></text></g><g class="tick" transform="translate(296, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">14</tspan></text></g><g class="tick" transform="translate(317, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: none;"><tspan x="0" dy=".71em" dx="0">15</tspan></text></g><g class="tick" transform="translate(337, 0)" style="opacity: 1;"><line y2="6" x1="0" x2="0"></line><text y="9" x="0" transform="" style="text-anchor: middle; display: block;"><tspan x="0" dy=".71em" dx="0">16</tspan></text></g><path class="domain" d="M0,6V0H340.328125V6"></path></g></g><g transform="translate(0,60)" style="visibility: hidden;"></g><text class="c3-title" x="171.6640625" y="0"></text></svg><div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none;"></div></div>\n          <script>\n            var c3ChartDefaults = $().c3ChartDefaults();\n\n            var donutConfig = c3ChartDefaults.getDefaultDonutConfig(\'A\');\n            donutConfig.bindto = \'#chart-pf-donut-4\';\n            donutConfig.color =  {\n              pattern: ["#EC7A08","#D1D1D1"]\n            };\n            donutConfig.data = {\n              type: "donut",\n              columns: [\n                ["Used", 85],\n                ["Available", 15]\n              ],\n              groups: [\n                ["used", "available"]\n              ],\n              order: null\n            };\n            donutConfig.tooltip = {\n              contents: function (d) {\n                return \'<span class="donut-tooltip-pf" style="white-space: nowrap;">\' +\n                        Math.round(d[0].ratio * 100) + \'%\' + \' Gbps \' + d[0].name +\n                        \'</span>\';\n              }\n            };\n\n            var chart1 = c3.generate(donutConfig);\n            var donutChartTitle = d3.select("#chart-pf-donut-4").select(\'text.c3-chart-arcs-title\');\n            donutChartTitle.text("");\n            donutChartTitle.insert(\'tspan\').text("1100").classed(\'donut-title-big-pf\', true).attr(\'dy\', 0).attr(\'x\', 0);\n            donutChartTitle.insert(\'tspan\').text("Gbps Used").classed(\'donut-title-small-pf\', true).attr(\'dy\', 20).attr(\'x\', 0);\n\n            var sparklineConfig = c3ChartDefaults.getDefaultSparklineConfig();\n            sparklineConfig.bindto = \'#chart-pf-sparkline-4\';\n            sparklineConfig.data = {\n              columns: [\n                [\'%\', 60, 55, 70, 44, 31, 67, 54, 46, 58, 75, 62, 68, 69, 88, 74, 88, 85],\n              ],\n              type: \'area\'\n            };\n\n            var chart2 = c3.generate(sparklineConfig);\n          </script>\n        </div>\n      </div>\n\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-12 col-sm-6 col-md-5">\n      <div class="card-pf" style="height: 160px;">\n        <div class="card-pf-heading">\n          <div class="dropdown card-pf-time-frame-filter">\n            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n              Last 30 Days <span class="caret"></span>\n            </button>\n            <ul class="dropdown-menu dropdown-menu-right" role="menu">\n              <li class="selected"><a href="#">Last 30 Days</a></li>\n              <li><a href="#">Last 60 Days</a></li>\n              <li><a href="#">Last 90 Days</a></li>\n            </ul>\n          </div>\n          <h2 class="card-pf-title" style="height: 17px;">\n            Card Title\n          </h2>\n        </div>\n        <div class="card-pf-body" style="">\n          <p>[card contents]</p>\n        </div>\n      </div>\n\n              </div>\n              <div class="col-xs-12 col-sm-6 col-md-7">\n      <div class="card-pf" style="height: 160px;">\n        <h2 class="card-pf-title" style="height: 17px;">\n          Card Title\n        </h2>\n        <div class="card-pf-body" style="">\n          <p>[card contents]</p>\n        </div>\n        <div class="card-pf-footer" style="">\n          <div class="dropdown card-pf-time-frame-filter">\n            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n              Last 30 Days <span class="caret"></span>\n            </button>\n            <ul class="dropdown-menu dropdown-menu-right" role="menu">\n              <li class="selected"><a href="#">Last 30 Days</a></li>\n              <li><a href="#">Last 60 Days</a></li>\n              <li><a href="#">Last 90 Days</a></li>\n            </ul>\n          </div>\n          <p>\n            <a href="#" class="card-pf-link-with-icon">\n              <span class="pficon pficon-add-circle-o"></span>Add New Cluster\n            </a>\n          </p>\n        </div>\n      </div>\n\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-12 col-sm-5 col-md-5">\n                <div class="card-pf" style="height: 160px;">\n                  <h2 class="card-pf-title" style="height: 17px;">\n                    Card Title\n                  </h2>\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                  <div class="card-pf-footer" style="">\n                    <div class="dropdown card-pf-time-frame-filter">\n                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n                        Last 30 Days <span class="caret"></span>\n                      </button>\n                      <ul class="dropdown-menu dropdown-menu-right" role="menu">\n                        <li class="selected"><a href="#">Last 30 Days</a></li>\n                        <li><a href="#">Last 60 Days</a></li>\n                        <li><a href="#">Last 90 Days</a></li>\n                      </ul>\n                    </div>\n                    <p>\n                      <a href="#" class="card-pf-link-with-icon">\n                        <span class="pficon pficon-flag"></span>View CPU Events\n                      </a>\n                    </p>\n                  </div>\n                </div>\n              </div>\n              <div class="col-xs-12 col-sm-7 col-md-7">\n                <div class="card-pf" style="height: 160px;">\n                  <h2 class="card-pf-title" style="height: 17px;">\n                    Card Title\n                  </h2>\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                </div>\n              </div>\n            </div>\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-6 col-sm-8 col-md-8">\n                <div class="card-pf" style="height: 123px;">\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                  <div class="card-pf-footer" style="height: 61px;">\n                    <p><a href="#">Footer link</a></p>\n                  </div>\n                </div>\n              </div>\n              <div class="col-xs-6 col-sm-4 col-md-4">\n                <div class="card-pf" style="height: 123px;">\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                  <div class="card-pf-footer" style="height: 61px;">\n                    <p><a href="#">Footer link</a></p>\n                  </div>\n                </div>\n              </div>\n            </div><!-- /row -->\n            <div class="row row-cards-pf">\n            <!-- Important:  if you need to nest additional .row within a .row.row-cards-pf, do *not* use .row-cards-pf on the nested .row  -->\n              <div class="col-xs-6 col-sm-6 col-md-6">\n                <div class="card-pf" style="height: 62px;">\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                </div>\n              </div>\n              <div class="col-xs-6 col-sm-6 col-md-6">\n                <div class="card-pf" style="height: 62px;">\n                  <div class="card-pf-body" style="height: 40px;">\n                    <p>[card contents]</p>\n                  </div>\n                </div>\n              </div>\n            </div><!-- /row -->' }
+        })
       );
     }
   }, {
@@ -54118,7 +53758,7 @@ exports.default = DashboardContent;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(jQuery) {
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -54130,11 +53770,11 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
-var _CorePageNoSidebar = __webpack_require__(326);
+var _CorePageNoSidebar = __webpack_require__(327);
 
 var _CorePageNoSidebar2 = _interopRequireDefault(_CorePageNoSidebar);
 
@@ -54160,6 +53800,12 @@ var DashboardPage = function (_CoreComponent) {
     }
 
     _createClass(DashboardPage, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            jQuery('html').addClass('layout-pf layout-pf-fixed');
+            jQuery('body').addClass('cards-pf');
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(_CorePageNoSidebar2.default, { renderer: this, className: this.className });
@@ -54167,7 +53813,7 @@ var DashboardPage = function (_CoreComponent) {
     }, {
         key: 'mainClassName',
         get: function get() {
-            return 'layout-pf layout-pf-fixed';
+            return '';
         }
     }, {
         key: 'content',
@@ -54180,6 +53826,7 @@ var DashboardPage = function (_CoreComponent) {
 }(_CoreComponent3.default);
 
 exports.default = DashboardPage;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)))
 
 /***/ }),
 /* 320 */
@@ -54198,7 +53845,264 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
+
+var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LeftNavigation = function (_CoreComponent) {
+  _inherits(LeftNavigation, _CoreComponent);
+
+  function LeftNavigation() {
+    _classCallCheck(this, LeftNavigation);
+
+    return _possibleConstructorReturn(this, (LeftNavigation.__proto__ || Object.getPrototypeOf(LeftNavigation)).apply(this, arguments));
+  }
+
+  _createClass(LeftNavigation, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'nav-pf-vertical nav-pf-vertical-with-sub-menus' },
+        _react2.default.createElement(
+          'ul',
+          { className: 'list-group' },
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-dashboard', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Dashboard' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Dashboard'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-shield', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Dolor' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Dolor'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item active ', 'data-target': '#ipsum-secondary' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-space-shuttle', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Ipsum' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Ipsum'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item ', 'data-target': '#amet-secondary' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-paper-plane', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Amet' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Amet'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-graduation-cap', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Adipscing' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Adipscing'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'fa fa-gamepad', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Lorem' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Lorem'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block', 'data-target': '#amet-secondary' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'pficon pficon-user', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'User' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'User'
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { id: 'user-secondary', className: 'nav-pf-secondary-nav' },
+              _react2.default.createElement(
+                'div',
+                { className: 'nav-item-pf-header' },
+                _react2.default.createElement('a', { className: 'secondary-collapse-toggle-pf', 'data-toggle': 'collapse-secondary-nav' }),
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'User'
+                )
+              ),
+              _react2.default.createElement(
+                'ul',
+                { className: 'list-group' },
+                _react2.default.createElement(
+                  'li',
+                  { className: 'list-group-item' },
+                  _react2.default.createElement(
+                    'a',
+                    null,
+                    _react2.default.createElement(
+                      'span',
+                      { className: 'list-group-item-value' },
+                      'Preferences'
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  'li',
+                  { className: 'list-group-item' },
+                  _react2.default.createElement(
+                    'a',
+                    null,
+                    _react2.default.createElement(
+                      'span',
+                      { className: 'list-group-item-value' },
+                      'Logout'
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'li',
+            { className: 'list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block', 'data-target': '#amet-secondary' },
+            _react2.default.createElement(
+              'a',
+              null,
+              _react2.default.createElement('span', { className: 'pficon pficon-help', 'data-toggle': 'tooltip', title: '', 'data-original-title': 'Amet' }),
+              _react2.default.createElement(
+                'span',
+                { className: 'list-group-item-value' },
+                'Help'
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { id: 'help-secondary', className: 'nav-pf-secondary-nav' },
+              _react2.default.createElement(
+                'div',
+                { className: 'nav-item-pf-header' },
+                _react2.default.createElement('a', { className: 'secondary-collapse-toggle-pf', 'data-toggle': 'collapse-secondary-nav' }),
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Help'
+                )
+              ),
+              _react2.default.createElement(
+                'ul',
+                { className: 'list-group' },
+                _react2.default.createElement(
+                  'li',
+                  { className: 'list-group-item' },
+                  _react2.default.createElement(
+                    'a',
+                    null,
+                    _react2.default.createElement(
+                      'span',
+                      { className: 'list-group-item-value' },
+                      'Help'
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  'li',
+                  { className: 'list-group-item' },
+                  _react2.default.createElement(
+                    'a',
+                    null,
+                    _react2.default.createElement(
+                      'span',
+                      { className: 'list-group-item-value' },
+                      'About'
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return LeftNavigation;
+}(_CoreComponent3.default);
+
+exports.default = LeftNavigation;
+
+/***/ }),
+/* 321 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(4);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
@@ -54218,9 +54122,19 @@ var Navigation = function (_CoreComponent) {
   _inherits(Navigation, _CoreComponent);
 
   function Navigation() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, Navigation);
 
-    return _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Navigation.__proto__ || Object.getPrototypeOf(Navigation)).call.apply(_ref, [this].concat(args))), _this), _this.onLogoutClick = function () {
+      _this.authStore.authJWTKey = '';
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Navigation, [{
@@ -54228,13 +54142,13 @@ var Navigation = function (_CoreComponent) {
     value: function render() {
       return _react2.default.createElement(
         'nav',
-        { className: this.className, role: 'navigation' },
+        { className: 'navbar navbar-pf-vertical' },
         _react2.default.createElement(
           'div',
           { className: 'navbar-header' },
           _react2.default.createElement(
             'button',
-            { type: 'button', className: 'navbar-toggle', 'data-toggle': 'collapse', 'data-target': '.navbar-collapse-1' },
+            { type: 'button', className: 'navbar-toggle' },
             _react2.default.createElement(
               'span',
               { className: 'sr-only' },
@@ -54246,23 +54160,58 @@ var Navigation = function (_CoreComponent) {
           ),
           _react2.default.createElement(
             'a',
-            { className: 'navbar-brand', href: '/' },
+            { href: '/', className: 'navbar-brand' },
             _react2.default.createElement(_CoreBrand2.default, null)
           )
         ),
         _react2.default.createElement(
-          'div',
-          { className: 'collapse navbar-collapse navbar-collapse-1' },
+          'nav',
+          { className: 'collapse navbar-collapse' },
           _react2.default.createElement(
             'ul',
-            { className: 'nav navbar-nav navbar-utility' },
+            { className: 'nav navbar-nav navbar-right navbar-iconic' },
             _react2.default.createElement(
               'li',
-              null,
+              { className: 'dropdown' },
               _react2.default.createElement(
                 'a',
-                { href: '#' },
-                'Status'
+                { className: 'dropdown-toggle nav-item-iconic', id: 'notifications', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'true' },
+                _react2.default.createElement('span', { title: 'Notifications', className: 'fa pficon-flag' }),
+                _react2.default.createElement(
+                  'span',
+                  { className: 'badge' },
+                  '2'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'dropdown-menu infotip bottom-right' },
+                _react2.default.createElement('div', { className: 'arrow' }),
+                _react2.default.createElement(
+                  'ul',
+                  { className: 'list-group' },
+                  _react2.default.createElement(
+                    'li',
+                    { className: 'list-group-item' },
+                    _react2.default.createElement('span', { className: 'i pficon pficon-info' }),
+                    ' Modified Datasources ExampleDS'
+                  ),
+                  _react2.default.createElement(
+                    'li',
+                    { className: 'list-group-item' },
+                    _react2.default.createElement('span', { className: 'i pficon pficon-info' }),
+                    ' Error: System Failure'
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'footer' },
+                  _react2.default.createElement(
+                    'a',
+                    null,
+                    'Clear Messages'
+                  )
+                )
               )
             ),
             _react2.default.createElement(
@@ -54270,21 +54219,20 @@ var Navigation = function (_CoreComponent) {
               { className: 'dropdown' },
               _react2.default.createElement(
                 'a',
-                { href: '#', className: 'dropdown-toggle', 'data-toggle': 'dropdown' },
-                _react2.default.createElement('span', { className: 'pficon pficon-user' }),
-                'Brian Johnson ',
-                _react2.default.createElement('b', { className: 'caret' })
+                { className: 'dropdown-toggle nav-item-iconic', id: 'dropdownMenu1', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'true' },
+                _react2.default.createElement('span', { title: 'Help', className: 'fa pficon-help' }),
+                _react2.default.createElement('span', { className: 'caret' })
               ),
               _react2.default.createElement(
                 'ul',
-                { className: 'dropdown-menu' },
+                { className: 'dropdown-menu', 'aria-labelledby': 'dropdownMenu1' },
                 _react2.default.createElement(
                   'li',
                   null,
                   _react2.default.createElement(
                     'a',
                     { href: '#' },
-                    'Link'
+                    'Help'
                   )
                 ),
                 _react2.default.createElement(
@@ -54293,198 +54241,46 @@ var Navigation = function (_CoreComponent) {
                   _react2.default.createElement(
                     'a',
                     { href: '#' },
-                    'Another link'
-                  )
-                ),
-                _react2.default.createElement(
-                  'li',
-                  null,
-                  _react2.default.createElement(
-                    'a',
-                    { href: '#' },
-                    'Something else here'
-                  )
-                ),
-                _react2.default.createElement('li', { className: 'divider' }),
-                _react2.default.createElement(
-                  'li',
-                  { className: 'dropdown-submenu' },
-                  _react2.default.createElement(
-                    'a',
-                    { tabIndex: '-1', href: '#' },
-                    'More options'
-                  ),
-                  _react2.default.createElement(
-                    'ul',
-                    { className: 'dropdown-menu' },
-                    _react2.default.createElement(
-                      'li',
-                      null,
-                      _react2.default.createElement(
-                        'a',
-                        { href: '#' },
-                        'Link'
-                      )
-                    ),
-                    _react2.default.createElement(
-                      'li',
-                      null,
-                      _react2.default.createElement(
-                        'a',
-                        { href: '#' },
-                        'Another link'
-                      )
-                    ),
-                    _react2.default.createElement(
-                      'li',
-                      null,
-                      _react2.default.createElement(
-                        'a',
-                        { href: '#' },
-                        'Something else here'
-                      )
-                    ),
-                    _react2.default.createElement('li', { className: 'divider' }),
-                    _react2.default.createElement(
-                      'li',
-                      { className: 'dropdown-header' },
-                      'Nav header'
-                    ),
-                    _react2.default.createElement(
-                      'li',
-                      null,
-                      _react2.default.createElement(
-                        'a',
-                        { href: '#' },
-                        'Separated link'
-                      )
-                    ),
-                    _react2.default.createElement('li', { className: 'divider' }),
-                    _react2.default.createElement(
-                      'li',
-                      null,
-                      _react2.default.createElement(
-                        'a',
-                        { href: '#' },
-                        'One more separated link'
-                      )
-                    )
-                  )
-                ),
-                _react2.default.createElement('li', { className: 'divider' }),
-                _react2.default.createElement(
-                  'li',
-                  null,
-                  _react2.default.createElement(
-                    'a',
-                    { href: '#' },
-                    'One more separated link'
+                    'About'
                   )
                 )
               )
-            )
-          ),
-          _react2.default.createElement(
-            'ul',
-            { className: 'nav navbar-nav navbar-primary' },
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'basic.html' },
-                'Basic'
-              )
             ),
             _react2.default.createElement(
               'li',
-              null,
+              { className: 'dropdown' },
               _react2.default.createElement(
                 'a',
-                { href: 'bootstrap-treeview-2.html' },
-                'Tree View'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              { className: 'active' },
+                { className: 'dropdown-toggle nav-item-iconic', id: 'dropdownMenu2', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'true' },
+                _react2.default.createElement('span', { title: 'Username', className: 'fa pficon-user' }),
+                _react2.default.createElement('span', { className: 'caret' })
+              ),
               _react2.default.createElement(
-                'a',
-                { href: 'dashboard.html', className: 'active' },
-                'Dashboard'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'form.html' },
-                'Form'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'tab.html' },
-                'Tab'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'typography-2.html' },
-                'Typography'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'card-view-multi-select.html' },
-                'Card View - Multi Select'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'card-view-single-select.html' },
-                'Card View - Single Select'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'cards.html' },
-                'Cards'
-              )
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              _react2.default.createElement(
-                'a',
-                { href: 'pagination-card-view.html' },
-                'Pagination - Card View'
+                'ul',
+                { className: 'dropdown-menu', 'aria-labelledby': 'dropdownMenu2' },
+                _react2.default.createElement(
+                  'li',
+                  null,
+                  _react2.default.createElement(
+                    'a',
+                    { href: '#' },
+                    'Preferences'
+                  )
+                ),
+                _react2.default.createElement(
+                  'li',
+                  null,
+                  _react2.default.createElement(
+                    'a',
+                    { onClick: this.onLogoutClick },
+                    'Logout'
+                  )
+                )
               )
             )
           )
         )
       );
-    }
-  }, {
-    key: 'mainClassName',
-    get: function get() {
-      return 'navbar navbar-default navbar-pf';
     }
   }]);
 
@@ -54494,7 +54290,7 @@ var Navigation = function (_CoreComponent) {
 exports.default = Navigation;
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54506,7 +54302,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _reactCookie = __webpack_require__(381);
+var _reactCookie = __webpack_require__(382);
 
 var _reactCookie2 = _interopRequireDefault(_reactCookie);
 
@@ -54550,7 +54346,7 @@ var CoreCookie = function () {
 exports.default = new CoreCookie();
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54566,7 +54362,7 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreModal2 = __webpack_require__(324);
+var _CoreModal2 = __webpack_require__(325);
 
 var _CoreModal3 = _interopRequireDefault(_CoreModal2);
 
@@ -54662,11 +54458,11 @@ var CoreErrorModal = function (_CoreModal) {
 exports.default = CoreErrorModal;
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(jQuery) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -54678,7 +54474,7 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
@@ -54714,6 +54510,11 @@ var CoreLogin = function (_CoreComponent) {
   }
 
   _createClass(CoreLogin, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      jQuery('html').addClass('login-pf');
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
@@ -54835,7 +54636,7 @@ var CoreLogin = function (_CoreComponent) {
   }, {
     key: 'mainClassName',
     get: function get() {
-      return 'login-pf';
+      return '';
     }
   }]);
 
@@ -54843,9 +54644,10 @@ var CoreLogin = function (_CoreComponent) {
 }(_CoreComponent3.default);
 
 exports.default = CoreLogin;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)))
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54861,11 +54663,11 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactModal = __webpack_require__(458);
+var _reactModal = __webpack_require__(459);
 
 var _reactModal2 = _interopRequireDefault(_reactModal);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
@@ -54987,7 +54789,7 @@ var CoreModal = function (_CoreComponent) {
 exports.default = CoreModal;
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55003,11 +54805,11 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
-var _CoreLogin = __webpack_require__(323);
+var _CoreLogin = __webpack_require__(324);
 
 var _CoreLogin2 = _interopRequireDefault(_CoreLogin);
 
@@ -55084,7 +54886,7 @@ var CorePage = function (_CoreComponent) {
 exports.default = CorePage;
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55100,7 +54902,7 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CorePage2 = __webpack_require__(325);
+var _CorePage2 = __webpack_require__(326);
 
 var _CorePage3 = _interopRequireDefault(_CorePage2);
 
@@ -55144,7 +54946,7 @@ var CorePageNoSidebar = function (_CorePage) {
 exports.default = CorePageNoSidebar;
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55157,7 +54959,7 @@ exports.CoreService = exports.CoreStore = exports.CoreActions = exports.DEFAULT_
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _when = __webpack_require__(291);
+var _when = __webpack_require__(292);
 
 var _when2 = _interopRequireDefault(_when);
 
@@ -55167,13 +54969,13 @@ var _AppDispatcher = __webpack_require__(112);
 
 var _AppDispatcher2 = _interopRequireDefault(_AppDispatcher);
 
-var _RESTUtil = __webpack_require__(332);
+var _RESTUtil = __webpack_require__(333);
 
 var _CoreUtil = __webpack_require__(66);
 
 var _CoreUtil2 = _interopRequireDefault(_CoreUtil);
 
-var _Events = __webpack_require__(330);
+var _Events = __webpack_require__(331);
 
 var _Events2 = _interopRequireDefault(_Events);
 
@@ -55693,7 +55495,7 @@ var CoreService = exports.CoreService = function () {
 }();
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55783,10 +55585,10 @@ var CoreUser = function () {
 }();
 
 exports.default = new CoreUser();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(292)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)))
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55802,11 +55604,11 @@ var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CoreComponent2 = __webpack_require__(26);
+var _CoreComponent2 = __webpack_require__(24);
 
 var _CoreComponent3 = _interopRequireDefault(_CoreComponent2);
 
-var _CoreErrorModal = __webpack_require__(322);
+var _CoreErrorModal = __webpack_require__(323);
 
 var _CoreErrorModal2 = _interopRequireDefault(_CoreErrorModal);
 
@@ -55828,6 +55630,16 @@ var CoreViewport = function (_CoreComponent) {
     }
 
     _createClass(CoreViewport, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.authStore.addChangeListener(this.refresh);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.authStore.removeChangeListener(this.refresh);
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -55875,7 +55687,7 @@ var CoreViewport = function (_CoreComponent) {
 exports.default = CoreViewport;
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55910,7 +55722,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55982,7 +55794,7 @@ exports.unflatten = unflatten;
 exports.removeNulls = removeNulls;
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55993,15 +55805,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.convertAndPrepare = exports.prepare = exports.options = exports.remove = exports.fetch = exports.update = exports.save = undefined;
 
-var _jsCookie = __webpack_require__(364);
+var _jsCookie = __webpack_require__(365);
 
 var _jsCookie2 = _interopRequireDefault(_jsCookie);
 
-var _RequestBuilder = __webpack_require__(333);
+var _RequestBuilder = __webpack_require__(334);
 
 var _RequestBuilder2 = _interopRequireDefault(_RequestBuilder);
 
-var _ObjectUtils = __webpack_require__(331);
+var _ObjectUtils = __webpack_require__(332);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -56065,7 +55877,7 @@ exports.prepare = prepare;
 exports.convertAndPrepare = convertAndPrepare;
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56077,7 +55889,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _es6Promise = __webpack_require__(342);
+var _es6Promise = __webpack_require__(343);
 
 var _es6Promise2 = _interopRequireDefault(_es6Promise);
 
@@ -56085,7 +55897,7 @@ var _axios = __webpack_require__(298);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _when = __webpack_require__(291);
+var _when = __webpack_require__(292);
 
 var _when2 = _interopRequireDefault(_when);
 
@@ -56166,7 +55978,7 @@ var RequestBuilder = function () {
 exports.default = RequestBuilder;
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56210,7 +56022,7 @@ var modalReducer = function modalReducer() {
 exports.default = modalReducer;
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56220,13 +56032,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _redux = __webpack_require__(62);
+var _redux = __webpack_require__(97);
 
-var _reduxThunk = __webpack_require__(97);
+var _reduxThunk = __webpack_require__(271);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _ModalReducer = __webpack_require__(334);
+var _ModalReducer = __webpack_require__(335);
 
 var _ModalReducer2 = _interopRequireDefault(_ModalReducer);
 
@@ -56237,7 +56049,7 @@ exports.default = (0, _redux.createStore)((0, _redux.combineReducers)({
 }), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56439,7 +56251,7 @@ function tryDecode(str, decode) {
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -56455,7 +56267,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(374);
+exports.humanize = __webpack_require__(375);
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -56647,12 +56459,12 @@ function coerce(val) {
 
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var pSlice = Array.prototype.slice;
-var objectKeys = __webpack_require__(340);
-var isArguments = __webpack_require__(339);
+var objectKeys = __webpack_require__(341);
+var isArguments = __webpack_require__(340);
 
 var deepEqual = module.exports = function (actual, expected, opts) {
   if (!opts) opts = {};
@@ -56747,7 +56559,7 @@ function objEquiv(a, b, opts) {
 
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(module, exports) {
 
 var supportsArgumentsClass = (function(){
@@ -56773,7 +56585,7 @@ function unsupported(object){
 
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(module, exports) {
 
 exports = module.exports = typeof Object.keys === 'function'
@@ -56788,7 +56600,7 @@ function shim (obj) {
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, exports) {
 
 module.exports = function(opts) {
@@ -56853,7 +56665,7 @@ ElementClass.prototype.toggle = function(className) {
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, global) {var require;/*!
@@ -56992,7 +56804,7 @@ function flush() {
 function attemptVertx() {
   try {
     var r = require;
-    var vertx = __webpack_require__(561);
+    var vertx = __webpack_require__(562);
     vertxNext = vertx.runOnLoop || vertx.runOnContext;
     return useVertxTimer();
   } catch (e) {
@@ -58018,7 +57830,7 @@ return Promise;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -58064,13 +57876,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58107,7 +57919,7 @@ function camelize(string) {
 module.exports = camelize;
 
 /***/ }),
-/* 346 */
+/* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58124,7 +57936,7 @@ module.exports = camelize;
 
 
 
-var camelize = __webpack_require__(345);
+var camelize = __webpack_require__(346);
 
 var msPattern = /^-ms-/;
 
@@ -58152,7 +57964,7 @@ function camelizeStyleName(string) {
 module.exports = camelizeStyleName;
 
 /***/ }),
-/* 347 */
+/* 348 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58169,7 +57981,7 @@ module.exports = camelizeStyleName;
  * 
  */
 
-var isTextNode = __webpack_require__(355);
+var isTextNode = __webpack_require__(356);
 
 /*eslint-disable no-bitwise */
 
@@ -58197,7 +58009,7 @@ function containsNode(outerNode, innerNode) {
 module.exports = containsNode;
 
 /***/ }),
-/* 348 */
+/* 349 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58330,7 +58142,7 @@ module.exports = createArrayFromMixed;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 349 */
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58351,8 +58163,8 @@ module.exports = createArrayFromMixed;
 
 var ExecutionEnvironment = __webpack_require__(12);
 
-var createArrayFromMixed = __webpack_require__(348);
-var getMarkupWrap = __webpack_require__(350);
+var createArrayFromMixed = __webpack_require__(349);
+var getMarkupWrap = __webpack_require__(351);
 var invariant = __webpack_require__(2);
 
 /**
@@ -58420,7 +58232,7 @@ module.exports = createNodesFromMarkup;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 350 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58521,7 +58333,7 @@ module.exports = getMarkupWrap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 351 */
+/* 352 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58565,7 +58377,7 @@ function getUnboundedScrollPosition(scrollable) {
 module.exports = getUnboundedScrollPosition;
 
 /***/ }),
-/* 352 */
+/* 353 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58603,7 +58415,7 @@ function hyphenate(string) {
 module.exports = hyphenate;
 
 /***/ }),
-/* 353 */
+/* 354 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58620,7 +58432,7 @@ module.exports = hyphenate;
 
 
 
-var hyphenate = __webpack_require__(352);
+var hyphenate = __webpack_require__(353);
 
 var msPattern = /^ms-/;
 
@@ -58647,7 +58459,7 @@ function hyphenateStyleName(string) {
 module.exports = hyphenateStyleName;
 
 /***/ }),
-/* 354 */
+/* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58675,7 +58487,7 @@ function isNode(object) {
 module.exports = isNode;
 
 /***/ }),
-/* 355 */
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58692,7 +58504,7 @@ module.exports = isNode;
  * @typechecks
  */
 
-var isNode = __webpack_require__(354);
+var isNode = __webpack_require__(355);
 
 /**
  * @param {*} object The object to check.
@@ -58705,7 +58517,7 @@ function isTextNode(object) {
 module.exports = isTextNode;
 
 /***/ }),
-/* 356 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58740,7 +58552,7 @@ function memoizeStringOnly(callback) {
 module.exports = memoizeStringOnly;
 
 /***/ }),
-/* 357 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58768,7 +58580,7 @@ if (ExecutionEnvironment.canUseDOM) {
 module.exports = performance || {};
 
 /***/ }),
-/* 358 */
+/* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58785,7 +58597,7 @@ module.exports = performance || {};
  * @typechecks
  */
 
-var performance = __webpack_require__(357);
+var performance = __webpack_require__(358);
 
 var performanceNow;
 
@@ -58807,7 +58619,7 @@ if (performance.now) {
 module.exports = performanceNow;
 
 /***/ }),
-/* 359 */
+/* 360 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58819,11 +58631,11 @@ module.exports = performanceNow;
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-module.exports.Dispatcher = __webpack_require__(360);
+module.exports.Dispatcher = __webpack_require__(361);
 
 
 /***/ }),
-/* 360 */
+/* 361 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59061,19 +58873,19 @@ module.exports = Dispatcher;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 361 */
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  XmlEntities: __webpack_require__(363),
-  Html4Entities: __webpack_require__(362),
+  XmlEntities: __webpack_require__(364),
+  Html4Entities: __webpack_require__(363),
   Html5Entities: __webpack_require__(118),
   AllHtmlEntities: __webpack_require__(118)
 };
 
 
 /***/ }),
-/* 362 */
+/* 363 */
 /***/ (function(module, exports) {
 
 var HTML_ALPHA = ['apos', 'nbsp', 'iexcl', 'cent', 'pound', 'curren', 'yen', 'brvbar', 'sect', 'uml', 'copy', 'ordf', 'laquo', 'not', 'shy', 'reg', 'macr', 'deg', 'plusmn', 'sup2', 'sup3', 'acute', 'micro', 'para', 'middot', 'cedil', 'sup1', 'ordm', 'raquo', 'frac14', 'frac12', 'frac34', 'iquest', 'Agrave', 'Aacute', 'Acirc', 'Atilde', 'Auml', 'Aring', 'Aelig', 'Ccedil', 'Egrave', 'Eacute', 'Ecirc', 'Euml', 'Igrave', 'Iacute', 'Icirc', 'Iuml', 'ETH', 'Ntilde', 'Ograve', 'Oacute', 'Ocirc', 'Otilde', 'Ouml', 'times', 'Oslash', 'Ugrave', 'Uacute', 'Ucirc', 'Uuml', 'Yacute', 'THORN', 'szlig', 'agrave', 'aacute', 'acirc', 'atilde', 'auml', 'aring', 'aelig', 'ccedil', 'egrave', 'eacute', 'ecirc', 'euml', 'igrave', 'iacute', 'icirc', 'iuml', 'eth', 'ntilde', 'ograve', 'oacute', 'ocirc', 'otilde', 'ouml', 'divide', 'Oslash', 'ugrave', 'uacute', 'ucirc', 'uuml', 'yacute', 'thorn', 'yuml', 'quot', 'amp', 'lt', 'gt', 'oelig', 'oelig', 'scaron', 'scaron', 'yuml', 'circ', 'tilde', 'ensp', 'emsp', 'thinsp', 'zwnj', 'zwj', 'lrm', 'rlm', 'ndash', 'mdash', 'lsquo', 'rsquo', 'sbquo', 'ldquo', 'rdquo', 'bdquo', 'dagger', 'dagger', 'permil', 'lsaquo', 'rsaquo', 'euro', 'fnof', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigmaf', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega', 'thetasym', 'upsih', 'piv', 'bull', 'hellip', 'prime', 'prime', 'oline', 'frasl', 'weierp', 'image', 'real', 'trade', 'alefsym', 'larr', 'uarr', 'rarr', 'darr', 'harr', 'crarr', 'larr', 'uarr', 'rarr', 'darr', 'harr', 'forall', 'part', 'exist', 'empty', 'nabla', 'isin', 'notin', 'ni', 'prod', 'sum', 'minus', 'lowast', 'radic', 'prop', 'infin', 'ang', 'and', 'or', 'cap', 'cup', 'int', 'there4', 'sim', 'cong', 'asymp', 'ne', 'equiv', 'le', 'ge', 'sub', 'sup', 'nsub', 'sube', 'supe', 'oplus', 'otimes', 'perp', 'sdot', 'lceil', 'rceil', 'lfloor', 'rfloor', 'lang', 'rang', 'loz', 'spades', 'clubs', 'hearts', 'diams'];
@@ -59226,7 +59038,7 @@ module.exports = Html4Entities;
 
 
 /***/ }),
-/* 363 */
+/* 364 */
 /***/ (function(module, exports) {
 
 var ALPHA_INDEX = {
@@ -59387,7 +59199,7 @@ module.exports = XmlEntities;
 
 
 /***/ }),
-/* 364 */
+/* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -59553,13 +59365,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 365 */
+/* 366 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(368);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(369);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(369);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(370);
 
 
 
@@ -59591,7 +59403,7 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 366 */
+/* 367 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59603,11 +59415,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)))
 
 /***/ }),
-/* 367 */
+/* 368 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(370);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(371);
 
 
 /** Built-in value references. */
@@ -59617,7 +59429,7 @@ var getPrototype = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__overArg_js
 
 
 /***/ }),
-/* 368 */
+/* 369 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59671,7 +59483,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 369 */
+/* 370 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59700,7 +59512,7 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 370 */
+/* 371 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59722,11 +59534,11 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 371 */
+/* 372 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(367);
 
 
 /** Detect free variable `self`. */
@@ -59739,7 +59551,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 372 */
+/* 373 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59775,7 +59587,7 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 373 */
+/* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -60010,11 +59822,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 373;
+webpackContext.id = 374;
 
 
 /***/ }),
-/* 374 */
+/* 375 */
 /***/ (function(module, exports) {
 
 /**
@@ -60169,7 +59981,7 @@ function plural(ms, n, name) {
 
 
 /***/ }),
-/* 375 */
+/* 376 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -60708,12 +60520,12 @@ function plural(ms, n, name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(51)(module), __webpack_require__(7)))
 
 /***/ }),
-/* 376 */
+/* 377 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var strictUriEncode = __webpack_require__(535);
+var strictUriEncode = __webpack_require__(536);
 
 exports.extract = function (str) {
 	return str.split('?')[1] || '';
@@ -60781,7 +60593,7 @@ exports.stringify = function (obj) {
 
 
 /***/ }),
-/* 377 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60872,7 +60684,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 378 */
+/* 379 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60964,18 +60776,18 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 379 */
+/* 380 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(377);
-exports.encode = exports.stringify = __webpack_require__(378);
+exports.decode = exports.parse = __webpack_require__(378);
+exports.encode = exports.stringify = __webpack_require__(379);
 
 
 /***/ }),
-/* 380 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61043,7 +60855,7 @@ exports.parse = querystring;
 
 
 /***/ }),
-/* 381 */
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61062,7 +60874,7 @@ exports.remove = remove;
 exports.setRawCookie = setRawCookie;
 exports.plugToRequest = plugToRequest;
 
-var _cookie = __webpack_require__(336);
+var _cookie = __webpack_require__(337);
 
 var _cookie2 = _interopRequireDefault(_cookie);
 
@@ -61201,7 +61013,7 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 382 */
+/* 383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61280,7 +61092,7 @@ var ARIADOMPropertyConfig = {
 module.exports = ARIADOMPropertyConfig;
 
 /***/ }),
-/* 383 */
+/* 384 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61309,7 +61121,7 @@ var AutoFocusUtils = {
 module.exports = AutoFocusUtils;
 
 /***/ }),
-/* 384 */
+/* 385 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61327,9 +61139,9 @@ module.exports = AutoFocusUtils;
 
 var EventPropagators = __webpack_require__(45);
 var ExecutionEnvironment = __webpack_require__(12);
-var FallbackCompositionState = __webpack_require__(390);
-var SyntheticCompositionEvent = __webpack_require__(433);
-var SyntheticInputEvent = __webpack_require__(436);
+var FallbackCompositionState = __webpack_require__(391);
+var SyntheticCompositionEvent = __webpack_require__(434);
+var SyntheticInputEvent = __webpack_require__(437);
 
 var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
 var START_KEYCODE = 229;
@@ -61699,7 +61511,7 @@ var BeforeInputEventPlugin = {
 module.exports = BeforeInputEventPlugin;
 
 /***/ }),
-/* 385 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61719,10 +61531,10 @@ var CSSProperty = __webpack_require__(230);
 var ExecutionEnvironment = __webpack_require__(12);
 var ReactInstrumentation = __webpack_require__(18);
 
-var camelizeStyleName = __webpack_require__(346);
-var dangerousStyleValue = __webpack_require__(443);
-var hyphenateStyleName = __webpack_require__(353);
-var memoizeStringOnly = __webpack_require__(356);
+var camelizeStyleName = __webpack_require__(347);
+var dangerousStyleValue = __webpack_require__(444);
+var hyphenateStyleName = __webpack_require__(354);
+var memoizeStringOnly = __webpack_require__(357);
 var warning = __webpack_require__(3);
 
 var processStyleName = memoizeStringOnly(function (styleName) {
@@ -61914,7 +61726,7 @@ module.exports = CSSPropertyOperations;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 386 */
+/* 387 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61935,7 +61747,7 @@ var EventPropagators = __webpack_require__(45);
 var ExecutionEnvironment = __webpack_require__(12);
 var ReactDOMComponentTree = __webpack_require__(10);
 var ReactUpdates = __webpack_require__(21);
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 var getEventTarget = __webpack_require__(80);
 var isEventSupported = __webpack_require__(81);
@@ -62240,7 +62052,7 @@ var ChangeEventPlugin = {
 module.exports = ChangeEventPlugin;
 
 /***/ }),
-/* 387 */
+/* 388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62261,7 +62073,7 @@ var _prodInvariant = __webpack_require__(6);
 var DOMLazyTree = __webpack_require__(35);
 var ExecutionEnvironment = __webpack_require__(12);
 
-var createNodesFromMarkup = __webpack_require__(349);
+var createNodesFromMarkup = __webpack_require__(350);
 var emptyFunction = __webpack_require__(20);
 var invariant = __webpack_require__(2);
 
@@ -62294,7 +62106,7 @@ module.exports = Danger;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 388 */
+/* 389 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62325,7 +62137,7 @@ var DefaultEventPluginOrder = ['ResponderEventPlugin', 'SimpleEventPlugin', 'Tap
 module.exports = DefaultEventPluginOrder;
 
 /***/ }),
-/* 389 */
+/* 390 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62430,7 +62242,7 @@ var EnterLeaveEventPlugin = {
 module.exports = EnterLeaveEventPlugin;
 
 /***/ }),
-/* 390 */
+/* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62530,7 +62342,7 @@ PooledClass.addPoolingTo(FallbackCompositionState);
 module.exports = FallbackCompositionState;
 
 /***/ }),
-/* 391 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62747,7 +62559,7 @@ var HTMLDOMPropertyConfig = {
 module.exports = HTMLDOMPropertyConfig;
 
 /***/ }),
-/* 392 */
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62907,7 +62719,7 @@ module.exports = ReactChildReconciler;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 393 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62924,7 +62736,7 @@ module.exports = ReactChildReconciler;
 
 
 var DOMChildrenOperations = __webpack_require__(69);
-var ReactDOMIDOperations = __webpack_require__(400);
+var ReactDOMIDOperations = __webpack_require__(401);
 
 /**
  * Abstracts away all functionality of the reconciler that requires knowledge of
@@ -62942,7 +62754,7 @@ var ReactComponentBrowserEnvironment = {
 module.exports = ReactComponentBrowserEnvironment;
 
 /***/ }),
-/* 394 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62971,7 +62783,7 @@ var ReactNodeTypes = __webpack_require__(240);
 var ReactReconciler = __webpack_require__(36);
 
 if (process.env.NODE_ENV !== 'production') {
-  var checkReactTypeSpec = __webpack_require__(442);
+  var checkReactTypeSpec = __webpack_require__(443);
 }
 
 var emptyObject = __webpack_require__(42);
@@ -63850,7 +63662,7 @@ module.exports = ReactCompositeComponent;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 395 */
+/* 396 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63869,15 +63681,15 @@ module.exports = ReactCompositeComponent;
 
 
 var ReactDOMComponentTree = __webpack_require__(10);
-var ReactDefaultInjection = __webpack_require__(412);
+var ReactDefaultInjection = __webpack_require__(413);
 var ReactMount = __webpack_require__(239);
 var ReactReconciler = __webpack_require__(36);
 var ReactUpdates = __webpack_require__(21);
-var ReactVersion = __webpack_require__(427);
+var ReactVersion = __webpack_require__(428);
 
-var findDOMNode = __webpack_require__(444);
+var findDOMNode = __webpack_require__(445);
 var getHostComponentFromComposite = __webpack_require__(245);
-var renderSubtreeIntoContainer = __webpack_require__(452);
+var renderSubtreeIntoContainer = __webpack_require__(453);
 var warning = __webpack_require__(3);
 
 ReactDefaultInjection.inject();
@@ -63954,9 +63766,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 if (process.env.NODE_ENV !== 'production') {
   var ReactInstrumentation = __webpack_require__(18);
-  var ReactDOMUnknownPropertyHook = __webpack_require__(409);
-  var ReactDOMNullInputValuePropHook = __webpack_require__(403);
-  var ReactDOMInvalidARIAHook = __webpack_require__(402);
+  var ReactDOMUnknownPropertyHook = __webpack_require__(410);
+  var ReactDOMNullInputValuePropHook = __webpack_require__(404);
+  var ReactDOMInvalidARIAHook = __webpack_require__(403);
 
   ReactInstrumentation.debugTool.addHook(ReactDOMUnknownPropertyHook);
   ReactInstrumentation.debugTool.addHook(ReactDOMNullInputValuePropHook);
@@ -63967,7 +63779,7 @@ module.exports = ReactDOM;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 396 */
+/* 397 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63988,8 +63800,8 @@ module.exports = ReactDOM;
 var _prodInvariant = __webpack_require__(6),
     _assign = __webpack_require__(8);
 
-var AutoFocusUtils = __webpack_require__(383);
-var CSSPropertyOperations = __webpack_require__(385);
+var AutoFocusUtils = __webpack_require__(384);
+var CSSPropertyOperations = __webpack_require__(386);
 var DOMLazyTree = __webpack_require__(35);
 var DOMNamespaces = __webpack_require__(70);
 var DOMProperty = __webpack_require__(27);
@@ -63999,13 +63811,13 @@ var EventPluginRegistry = __webpack_require__(52);
 var ReactBrowserEventEmitter = __webpack_require__(53);
 var ReactDOMComponentFlags = __webpack_require__(233);
 var ReactDOMComponentTree = __webpack_require__(10);
-var ReactDOMInput = __webpack_require__(401);
-var ReactDOMOption = __webpack_require__(404);
+var ReactDOMInput = __webpack_require__(402);
+var ReactDOMOption = __webpack_require__(405);
 var ReactDOMSelect = __webpack_require__(234);
-var ReactDOMTextarea = __webpack_require__(407);
+var ReactDOMTextarea = __webpack_require__(408);
 var ReactInstrumentation = __webpack_require__(18);
-var ReactMultiChild = __webpack_require__(420);
-var ReactServerRenderingTransaction = __webpack_require__(425);
+var ReactMultiChild = __webpack_require__(421);
+var ReactServerRenderingTransaction = __webpack_require__(426);
 
 var emptyFunction = __webpack_require__(20);
 var escapeTextContentForBrowser = __webpack_require__(56);
@@ -64974,7 +64786,7 @@ module.exports = ReactDOMComponent;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65013,7 +64825,7 @@ module.exports = ReactDOMContainerInfo;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65078,7 +64890,7 @@ _assign(ReactDOMEmptyComponent.prototype, {
 module.exports = ReactDOMEmptyComponent;
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65102,7 +64914,7 @@ var ReactDOMFeatureFlags = {
 module.exports = ReactDOMFeatureFlags;
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65141,7 +64953,7 @@ var ReactDOMIDOperations = {
 module.exports = ReactDOMIDOperations;
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65425,7 +65237,7 @@ module.exports = ReactDOMInput;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65524,7 +65336,7 @@ module.exports = ReactDOMInvalidARIAHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65573,7 +65385,7 @@ module.exports = ReactDOMNullInputValuePropHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65702,7 +65514,7 @@ module.exports = ReactDOMOption;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65720,7 +65532,7 @@ module.exports = ReactDOMOption;
 
 var ExecutionEnvironment = __webpack_require__(12);
 
-var getNodeForCharacterOffset = __webpack_require__(449);
+var getNodeForCharacterOffset = __webpack_require__(450);
 var getTextContentAccessor = __webpack_require__(246);
 
 /**
@@ -65919,7 +65731,7 @@ var ReactDOMSelection = {
 module.exports = ReactDOMSelection;
 
 /***/ }),
-/* 406 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66089,7 +65901,7 @@ module.exports = ReactDOMTextComponent;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 407 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66255,7 +66067,7 @@ module.exports = ReactDOMTextarea;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 408 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66397,7 +66209,7 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 409 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66515,7 +66327,7 @@ module.exports = ReactDOMUnknownPropertyHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 410 */
+/* 411 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66532,12 +66344,12 @@ module.exports = ReactDOMUnknownPropertyHook;
 
 
 
-var ReactInvalidSetStateWarningHook = __webpack_require__(418);
-var ReactHostOperationHistoryHook = __webpack_require__(416);
+var ReactInvalidSetStateWarningHook = __webpack_require__(419);
+var ReactHostOperationHistoryHook = __webpack_require__(417);
 var ReactComponentTreeHook = __webpack_require__(16);
 var ExecutionEnvironment = __webpack_require__(12);
 
-var performanceNow = __webpack_require__(358);
+var performanceNow = __webpack_require__(359);
 var warning = __webpack_require__(3);
 
 var hooks = [];
@@ -66882,7 +66694,7 @@ module.exports = ReactDebugTool;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 411 */
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66955,7 +66767,7 @@ var ReactDefaultBatchingStrategy = {
 module.exports = ReactDefaultBatchingStrategy;
 
 /***/ }),
-/* 412 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66971,25 +66783,25 @@ module.exports = ReactDefaultBatchingStrategy;
 
 
 
-var ARIADOMPropertyConfig = __webpack_require__(382);
-var BeforeInputEventPlugin = __webpack_require__(384);
-var ChangeEventPlugin = __webpack_require__(386);
-var DefaultEventPluginOrder = __webpack_require__(388);
-var EnterLeaveEventPlugin = __webpack_require__(389);
-var HTMLDOMPropertyConfig = __webpack_require__(391);
-var ReactComponentBrowserEnvironment = __webpack_require__(393);
-var ReactDOMComponent = __webpack_require__(396);
+var ARIADOMPropertyConfig = __webpack_require__(383);
+var BeforeInputEventPlugin = __webpack_require__(385);
+var ChangeEventPlugin = __webpack_require__(387);
+var DefaultEventPluginOrder = __webpack_require__(389);
+var EnterLeaveEventPlugin = __webpack_require__(390);
+var HTMLDOMPropertyConfig = __webpack_require__(392);
+var ReactComponentBrowserEnvironment = __webpack_require__(394);
+var ReactDOMComponent = __webpack_require__(397);
 var ReactDOMComponentTree = __webpack_require__(10);
-var ReactDOMEmptyComponent = __webpack_require__(398);
-var ReactDOMTreeTraversal = __webpack_require__(408);
-var ReactDOMTextComponent = __webpack_require__(406);
-var ReactDefaultBatchingStrategy = __webpack_require__(411);
-var ReactEventListener = __webpack_require__(415);
-var ReactInjection = __webpack_require__(417);
-var ReactReconcileTransaction = __webpack_require__(423);
-var SVGDOMPropertyConfig = __webpack_require__(428);
-var SelectEventPlugin = __webpack_require__(429);
-var SimpleEventPlugin = __webpack_require__(430);
+var ReactDOMEmptyComponent = __webpack_require__(399);
+var ReactDOMTreeTraversal = __webpack_require__(409);
+var ReactDOMTextComponent = __webpack_require__(407);
+var ReactDefaultBatchingStrategy = __webpack_require__(412);
+var ReactEventListener = __webpack_require__(416);
+var ReactInjection = __webpack_require__(418);
+var ReactReconcileTransaction = __webpack_require__(424);
+var SVGDOMPropertyConfig = __webpack_require__(429);
+var SelectEventPlugin = __webpack_require__(430);
+var SimpleEventPlugin = __webpack_require__(431);
 
 var alreadyInjected = false;
 
@@ -67046,7 +66858,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 413 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67071,7 +66883,7 @@ var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol['for'] && Symbol
 module.exports = REACT_ELEMENT_TYPE;
 
 /***/ }),
-/* 414 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67109,7 +66921,7 @@ var ReactEventEmitterMixin = {
 module.exports = ReactEventEmitterMixin;
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67134,7 +66946,7 @@ var ReactDOMComponentTree = __webpack_require__(10);
 var ReactUpdates = __webpack_require__(21);
 
 var getEventTarget = __webpack_require__(80);
-var getUnboundedScrollPosition = __webpack_require__(351);
+var getUnboundedScrollPosition = __webpack_require__(352);
 
 /**
  * Find the deepest React component completely containing the root of the
@@ -67269,7 +67081,7 @@ var ReactEventListener = {
 module.exports = ReactEventListener;
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67308,7 +67120,7 @@ var ReactHostOperationHistoryHook = {
 module.exports = ReactHostOperationHistoryHook;
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67347,7 +67159,7 @@ var ReactInjection = {
 module.exports = ReactInjection;
 
 /***/ }),
-/* 418 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67390,7 +67202,7 @@ module.exports = ReactInvalidSetStateWarningHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 419 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67406,7 +67218,7 @@ module.exports = ReactInvalidSetStateWarningHook;
 
 
 
-var adler32 = __webpack_require__(441);
+var adler32 = __webpack_require__(442);
 
 var TAG_END = /\/?>/;
 var COMMENT_START = /^<\!\-\-/;
@@ -67445,7 +67257,7 @@ var ReactMarkupChecksum = {
 module.exports = ReactMarkupChecksum;
 
 /***/ }),
-/* 420 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67469,10 +67281,10 @@ var ReactInstrumentation = __webpack_require__(18);
 
 var ReactCurrentOwner = __webpack_require__(23);
 var ReactReconciler = __webpack_require__(36);
-var ReactChildReconciler = __webpack_require__(392);
+var ReactChildReconciler = __webpack_require__(393);
 
 var emptyFunction = __webpack_require__(20);
-var flattenChildren = __webpack_require__(445);
+var flattenChildren = __webpack_require__(446);
 var invariant = __webpack_require__(2);
 
 /**
@@ -67901,7 +67713,7 @@ module.exports = ReactMultiChild;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 421 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68001,7 +67813,7 @@ module.exports = ReactOwner;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 422 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68032,7 +67844,7 @@ module.exports = ReactPropTypeLocationNames;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 423 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68216,7 +68028,7 @@ module.exports = ReactReconcileTransaction;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 424 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68233,7 +68045,7 @@ module.exports = ReactReconcileTransaction;
 
 
 
-var ReactOwner = __webpack_require__(421);
+var ReactOwner = __webpack_require__(422);
 
 var ReactRef = {};
 
@@ -68310,7 +68122,7 @@ ReactRef.detachRefs = function (instance, element) {
 module.exports = ReactRef;
 
 /***/ }),
-/* 425 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68331,7 +68143,7 @@ var _assign = __webpack_require__(8);
 var PooledClass = __webpack_require__(30);
 var Transaction = __webpack_require__(55);
 var ReactInstrumentation = __webpack_require__(18);
-var ReactServerUpdateQueue = __webpack_require__(426);
+var ReactServerUpdateQueue = __webpack_require__(427);
 
 /**
  * Executed within the scope of the `Transaction` instance. Consider these as
@@ -68406,7 +68218,7 @@ module.exports = ReactServerRenderingTransaction;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 426 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68551,7 +68363,7 @@ module.exports = ReactServerUpdateQueue;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 427 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68570,7 +68382,7 @@ module.exports = ReactServerUpdateQueue;
 module.exports = '15.4.2';
 
 /***/ }),
-/* 428 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68877,7 +68689,7 @@ Object.keys(ATTRS).forEach(function (key) {
 module.exports = SVGDOMPropertyConfig;
 
 /***/ }),
-/* 429 */
+/* 430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68897,7 +68709,7 @@ var EventPropagators = __webpack_require__(45);
 var ExecutionEnvironment = __webpack_require__(12);
 var ReactDOMComponentTree = __webpack_require__(10);
 var ReactInputSelection = __webpack_require__(238);
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 var getActiveElement = __webpack_require__(116);
 var isTextInputElement = __webpack_require__(248);
@@ -69073,7 +68885,7 @@ var SelectEventPlugin = {
 module.exports = SelectEventPlugin;
 
 /***/ }),
-/* 430 */
+/* 431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69095,17 +68907,17 @@ var _prodInvariant = __webpack_require__(6);
 var EventListener = __webpack_require__(114);
 var EventPropagators = __webpack_require__(45);
 var ReactDOMComponentTree = __webpack_require__(10);
-var SyntheticAnimationEvent = __webpack_require__(431);
-var SyntheticClipboardEvent = __webpack_require__(432);
-var SyntheticEvent = __webpack_require__(25);
-var SyntheticFocusEvent = __webpack_require__(435);
-var SyntheticKeyboardEvent = __webpack_require__(437);
+var SyntheticAnimationEvent = __webpack_require__(432);
+var SyntheticClipboardEvent = __webpack_require__(433);
+var SyntheticEvent = __webpack_require__(26);
+var SyntheticFocusEvent = __webpack_require__(436);
+var SyntheticKeyboardEvent = __webpack_require__(438);
 var SyntheticMouseEvent = __webpack_require__(54);
-var SyntheticDragEvent = __webpack_require__(434);
-var SyntheticTouchEvent = __webpack_require__(438);
-var SyntheticTransitionEvent = __webpack_require__(439);
+var SyntheticDragEvent = __webpack_require__(435);
+var SyntheticTouchEvent = __webpack_require__(439);
+var SyntheticTransitionEvent = __webpack_require__(440);
 var SyntheticUIEvent = __webpack_require__(47);
-var SyntheticWheelEvent = __webpack_require__(440);
+var SyntheticWheelEvent = __webpack_require__(441);
 
 var emptyFunction = __webpack_require__(20);
 var getEventCharCode = __webpack_require__(78);
@@ -69307,7 +69119,7 @@ module.exports = SimpleEventPlugin;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 431 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69323,7 +69135,7 @@ module.exports = SimpleEventPlugin;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 /**
  * @interface Event
@@ -69351,7 +69163,7 @@ SyntheticEvent.augmentClass(SyntheticAnimationEvent, AnimationEventInterface);
 module.exports = SyntheticAnimationEvent;
 
 /***/ }),
-/* 432 */
+/* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69367,7 +69179,7 @@ module.exports = SyntheticAnimationEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 /**
  * @interface Event
@@ -69394,7 +69206,7 @@ SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 module.exports = SyntheticClipboardEvent;
 
 /***/ }),
-/* 433 */
+/* 434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69410,7 +69222,7 @@ module.exports = SyntheticClipboardEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 /**
  * @interface Event
@@ -69435,7 +69247,7 @@ SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface
 module.exports = SyntheticCompositionEvent;
 
 /***/ }),
-/* 434 */
+/* 435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69476,7 +69288,7 @@ SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 module.exports = SyntheticDragEvent;
 
 /***/ }),
-/* 435 */
+/* 436 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69517,7 +69329,7 @@ SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 module.exports = SyntheticFocusEvent;
 
 /***/ }),
-/* 436 */
+/* 437 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69533,7 +69345,7 @@ module.exports = SyntheticFocusEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 /**
  * @interface Event
@@ -69559,7 +69371,7 @@ SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 module.exports = SyntheticInputEvent;
 
 /***/ }),
-/* 437 */
+/* 438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69578,7 +69390,7 @@ module.exports = SyntheticInputEvent;
 var SyntheticUIEvent = __webpack_require__(47);
 
 var getEventCharCode = __webpack_require__(78);
-var getEventKey = __webpack_require__(446);
+var getEventKey = __webpack_require__(447);
 var getEventModifierState = __webpack_require__(79);
 
 /**
@@ -69648,7 +69460,7 @@ SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 module.exports = SyntheticKeyboardEvent;
 
 /***/ }),
-/* 438 */
+/* 439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69698,7 +69510,7 @@ SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 module.exports = SyntheticTouchEvent;
 
 /***/ }),
-/* 439 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69714,7 +69526,7 @@ module.exports = SyntheticTouchEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(25);
+var SyntheticEvent = __webpack_require__(26);
 
 /**
  * @interface Event
@@ -69742,7 +69554,7 @@ SyntheticEvent.augmentClass(SyntheticTransitionEvent, TransitionEventInterface);
 module.exports = SyntheticTransitionEvent;
 
 /***/ }),
-/* 440 */
+/* 441 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69801,7 +69613,7 @@ SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 module.exports = SyntheticWheelEvent;
 
 /***/ }),
-/* 441 */
+/* 442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69850,7 +69662,7 @@ function adler32(data) {
 module.exports = adler32;
 
 /***/ }),
-/* 442 */
+/* 443 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69868,7 +69680,7 @@ module.exports = adler32;
 
 var _prodInvariant = __webpack_require__(6);
 
-var ReactPropTypeLocationNames = __webpack_require__(422);
+var ReactPropTypeLocationNames = __webpack_require__(423);
 var ReactPropTypesSecret = __webpack_require__(241);
 
 var invariant = __webpack_require__(2);
@@ -69943,7 +69755,7 @@ module.exports = checkReactTypeSpec;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 443 */
+/* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70028,7 +69840,7 @@ module.exports = dangerousStyleValue;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 444 */
+/* 445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70094,7 +69906,7 @@ module.exports = findDOMNode;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 445 */
+/* 446 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70176,7 +69988,7 @@ module.exports = flattenChildren;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 446 */
+/* 447 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70283,7 +70095,7 @@ function getEventKey(nativeEvent) {
 module.exports = getEventKey;
 
 /***/ }),
-/* 447 */
+/* 448 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70329,7 +70141,7 @@ function getIteratorFn(maybeIterable) {
 module.exports = getIteratorFn;
 
 /***/ }),
-/* 448 */
+/* 449 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70355,7 +70167,7 @@ function getNextDebugID() {
 module.exports = getNextDebugID;
 
 /***/ }),
-/* 449 */
+/* 450 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70434,7 +70246,7 @@ function getNodeForCharacterOffset(root, offset) {
 module.exports = getNodeForCharacterOffset;
 
 /***/ }),
-/* 450 */
+/* 451 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70540,7 +70352,7 @@ function getVendorPrefixedEventName(eventName) {
 module.exports = getVendorPrefixedEventName;
 
 /***/ }),
-/* 451 */
+/* 452 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70571,7 +70383,7 @@ function quoteAttributeValueForBrowser(value) {
 module.exports = quoteAttributeValueForBrowser;
 
 /***/ }),
-/* 452 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70592,15 +70404,15 @@ var ReactMount = __webpack_require__(239);
 module.exports = ReactMount.renderSubtreeIntoContainer;
 
 /***/ }),
-/* 453 */
+/* 454 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(4);
 var ReactDOM = __webpack_require__(43);
-var ExecutionEnvironment = __webpack_require__(343);
-var ModalPortal = React.createFactory(__webpack_require__(454));
-var ariaAppHider = __webpack_require__(455);
-var elementClass = __webpack_require__(341);
+var ExecutionEnvironment = __webpack_require__(344);
+var ModalPortal = React.createFactory(__webpack_require__(455));
+var ariaAppHider = __webpack_require__(456);
+var elementClass = __webpack_require__(342);
 var renderSubtreeIntoContainer = __webpack_require__(43).unstable_renderSubtreeIntoContainer;
 var Assign = __webpack_require__(120);
 
@@ -70754,13 +70566,13 @@ module.exports = Modal
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 454 */
+/* 455 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var React = __webpack_require__(4);
 var div = React.DOM.div;
-var focusManager = __webpack_require__(456);
-var scopeTab = __webpack_require__(457);
+var focusManager = __webpack_require__(457);
+var scopeTab = __webpack_require__(458);
 var Assign = __webpack_require__(120);
 
 // so that our CSS is statically analyzable
@@ -70965,7 +70777,7 @@ var ModalPortal = module.exports = React.createClass({
 
 
 /***/ }),
-/* 455 */
+/* 456 */
 /***/ (function(module, exports) {
 
 var _element = typeof document !== 'undefined' ? document.body : null;
@@ -71013,7 +70825,7 @@ exports.resetForTesting = resetForTesting;
 
 
 /***/ }),
-/* 456 */
+/* 457 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var findTabbable = __webpack_require__(251);
@@ -71087,7 +70899,7 @@ exports.teardownScopedFocus = function() {
 
 
 /***/ }),
-/* 457 */
+/* 458 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var findTabbable = __webpack_require__(251);
@@ -71112,15 +70924,15 @@ module.exports = function(node, event) {
 
 
 /***/ }),
-/* 458 */
+/* 459 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(453);
+module.exports = __webpack_require__(454);
 
 
 
 /***/ }),
-/* 459 */
+/* 460 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71199,16 +71011,16 @@ Provider.displayName = 'Provider';
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 460 */
+/* 461 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_connectAdvanced__ = __webpack_require__(252);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shallowEqual__ = __webpack_require__(468);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mapDispatchToProps__ = __webpack_require__(461);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mapStateToProps__ = __webpack_require__(462);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mergeProps__ = __webpack_require__(463);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__selectorFactory__ = __webpack_require__(464);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shallowEqual__ = __webpack_require__(469);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mapDispatchToProps__ = __webpack_require__(462);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mapStateToProps__ = __webpack_require__(463);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mergeProps__ = __webpack_require__(464);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__selectorFactory__ = __webpack_require__(465);
 /* unused harmony export createConnect */
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -71315,11 +71127,11 @@ function createConnect() {
 /* harmony default export */ __webpack_exports__["a"] = createConnect();
 
 /***/ }),
-/* 461 */
+/* 462 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__wrapMapToProps__ = __webpack_require__(253);
 /* unused harmony export whenMapDispatchToPropsIsFunction */
 /* unused harmony export whenMapDispatchToPropsIsMissing */
@@ -71346,7 +71158,7 @@ function whenMapDispatchToPropsIsObject(mapDispatchToProps) {
 /* harmony default export */ __webpack_exports__["a"] = [whenMapDispatchToPropsIsFunction, whenMapDispatchToPropsIsMissing, whenMapDispatchToPropsIsObject];
 
 /***/ }),
-/* 462 */
+/* 463 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71368,7 +71180,7 @@ function whenMapStateToPropsIsMissing(mapStateToProps) {
 /* harmony default export */ __webpack_exports__["a"] = [whenMapStateToPropsIsFunction, whenMapStateToPropsIsMissing];
 
 /***/ }),
-/* 463 */
+/* 464 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71425,11 +71237,11 @@ function whenMergePropsIsOmitted(mergeProps) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 464 */
+/* 465 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__verifySubselectors__ = __webpack_require__(465);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__verifySubselectors__ = __webpack_require__(466);
 /* unused harmony export impureFinalPropsSelectorFactory */
 /* unused harmony export pureFinalPropsSelectorFactory */
 /* harmony export (immutable) */ __webpack_exports__["a"] = finalPropsSelectorFactory;
@@ -71538,7 +71350,7 @@ function finalPropsSelectorFactory(dispatch, _ref2) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 465 */
+/* 466 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71563,14 +71375,14 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 }
 
 /***/ }),
-/* 466 */
+/* 467 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Provider__ = __webpack_require__(459);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Provider__ = __webpack_require__(460);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__ = __webpack_require__(252);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__connect_connect__ = __webpack_require__(460);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__connect_connect__ = __webpack_require__(461);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Provider", function() { return __WEBPACK_IMPORTED_MODULE_0__components_Provider__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connectAdvanced", function() { return __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return __WEBPACK_IMPORTED_MODULE_2__connect_connect__["a"]; });
@@ -71581,7 +71393,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 467 */
+/* 468 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71677,7 +71489,7 @@ var Subscription = function () {
 
 
 /***/ }),
-/* 468 */
+/* 469 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71714,7 +71526,7 @@ function shallowEqual(objA, objB) {
 }
 
 /***/ }),
-/* 469 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -71750,7 +71562,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 470 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -71784,7 +71596,7 @@ exports.default = IndexLink;
 module.exports = exports['default'];
 
 /***/ }),
-/* 471 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -71854,7 +71666,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 472 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -71921,7 +71733,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 473 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -71996,7 +71808,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 474 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72060,7 +71872,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 475 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72112,7 +71924,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 476 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72343,7 +72155,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 477 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72380,7 +72192,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 478 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72509,7 +72321,7 @@ function runLeaveHooks(routes, prevState) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 479 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72573,7 +72385,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 480 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72581,7 +72393,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _createBrowserHistory = __webpack_require__(491);
+var _createBrowserHistory = __webpack_require__(492);
 
 var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 
@@ -72595,7 +72407,7 @@ exports.default = (0, _createRouterHistory2.default)(_createBrowserHistory2.defa
 module.exports = exports['default'];
 
 /***/ }),
-/* 481 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72678,7 +72490,7 @@ exports.default = computeChangedRoutes;
 module.exports = exports['default'];
 
 /***/ }),
-/* 482 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72730,7 +72542,7 @@ exports.default = getComponents;
 module.exports = exports['default'];
 
 /***/ }),
-/* 483 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72762,7 +72574,7 @@ exports.default = getRouteParams;
 module.exports = exports['default'];
 
 /***/ }),
-/* 484 */
+/* 485 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72784,7 +72596,7 @@ exports.default = (0, _createRouterHistory2.default)(_createHashHistory2.default
 module.exports = exports['default'];
 
 /***/ }),
-/* 485 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -72942,7 +72754,7 @@ function isActive(_ref, indexOnly, currentLocation, routes, params) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 486 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73032,7 +72844,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 487 */
+/* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73290,7 +73102,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 488 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73348,7 +73160,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 489 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73419,7 +73231,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 490 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73483,7 +73295,7 @@ function loopAsync(turns, work, callback) {
 }
 
 /***/ }),
-/* 491 */
+/* 492 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73670,7 +73482,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 492 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73728,7 +73540,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 493 */
+/* 494 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73889,7 +73701,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 494 */
+/* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73953,7 +73765,7 @@ var KeyEscapeUtils = {
 module.exports = KeyEscapeUtils;
 
 /***/ }),
-/* 495 */
+/* 496 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74071,7 +73883,7 @@ module.exports = PooledClass;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 496 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74087,11 +73899,11 @@ module.exports = PooledClass;
 
 
 
-var PooledClass = __webpack_require__(495);
+var PooledClass = __webpack_require__(496);
 var ReactElement = __webpack_require__(33);
 
 var emptyFunction = __webpack_require__(20);
-var traverseAllChildren = __webpack_require__(504);
+var traverseAllChildren = __webpack_require__(505);
 
 var twoArgumentPooler = PooledClass.twoArgumentPooler;
 var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -74267,7 +74079,7 @@ var ReactChildren = {
 module.exports = ReactChildren;
 
 /***/ }),
-/* 497 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74990,7 +74802,7 @@ module.exports = ReactClass;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 498 */
+/* 499 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75166,7 +74978,7 @@ module.exports = ReactDOMFactories;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 499 */
+/* 500 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75606,7 +75418,7 @@ module.exports = ReactPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 500 */
+/* 501 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75653,7 +75465,7 @@ ReactPureComponent.prototype.isPureReactComponent = true;
 module.exports = ReactPureComponent;
 
 /***/ }),
-/* 501 */
+/* 502 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75672,7 +75484,7 @@ module.exports = ReactPureComponent;
 module.exports = '15.4.2';
 
 /***/ }),
-/* 502 */
+/* 503 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75765,7 +75577,7 @@ module.exports = checkReactTypeSpec;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 503 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75809,7 +75621,7 @@ module.exports = onlyChild;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 504 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75832,7 +75644,7 @@ var REACT_ELEMENT_TYPE = __webpack_require__(268);
 
 var getIteratorFn = __webpack_require__(96);
 var invariant = __webpack_require__(2);
-var KeyEscapeUtils = __webpack_require__(494);
+var KeyEscapeUtils = __webpack_require__(495);
 var warning = __webpack_require__(3);
 
 var SEPARATOR = '.';
@@ -75991,11 +75803,11 @@ module.exports = traverseAllChildren;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 505 */
+/* 506 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__compose__ = __webpack_require__(271);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__compose__ = __webpack_require__(272);
 /* harmony export (immutable) */ __webpack_exports__["a"] = applyMiddleware;
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -76047,7 +75859,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 506 */
+/* 507 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76101,13 +75913,13 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 507 */
+/* 508 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(272);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(273);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_es_isPlainObject__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(274);
 /* harmony export (immutable) */ __webpack_exports__["a"] = combineReducers;
 
 
@@ -76241,7 +76053,7 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 508 */
+/* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76286,15 +76098,15 @@ module.exports = function required(port, protocol) {
 
 
 /***/ }),
-/* 509 */
+/* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var transportList = __webpack_require__(518);
+var transportList = __webpack_require__(519);
 
-module.exports = __webpack_require__(516)(transportList);
+module.exports = __webpack_require__(517)(transportList);
 
 // TODO can't get rid of this until all servers do
 if ('_sockjs_onload' in global) {
@@ -76304,7 +76116,7 @@ if ('_sockjs_onload' in global) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 510 */
+/* 511 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76328,7 +76140,7 @@ module.exports = CloseEvent;
 
 
 /***/ }),
-/* 511 */
+/* 512 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76350,13 +76162,13 @@ module.exports = TransportMessageEvent;
 
 
 /***/ }),
-/* 512 */
+/* 513 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var JSON3 = __webpack_require__(24)
+var JSON3 = __webpack_require__(25)
   , iframeUtils = __webpack_require__(50)
   ;
 
@@ -76384,7 +76196,7 @@ module.exports = FacadeJS;
 
 
 /***/ }),
-/* 513 */
+/* 514 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76392,11 +76204,11 @@ module.exports = FacadeJS;
 
 var urlUtils = __webpack_require__(19)
   , eventUtils = __webpack_require__(29)
-  , JSON3 = __webpack_require__(24)
-  , FacadeJS = __webpack_require__(512)
-  , InfoIframeReceiver = __webpack_require__(276)
+  , JSON3 = __webpack_require__(25)
+  , FacadeJS = __webpack_require__(513)
+  , InfoIframeReceiver = __webpack_require__(277)
   , iframeUtils = __webpack_require__(50)
-  , loc = __webpack_require__(277)
+  , loc = __webpack_require__(278)
   ;
 
 var debug = function() {};
@@ -76494,7 +76306,7 @@ module.exports = function(SockJS, availableTransports) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 514 */
+/* 515 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76502,10 +76314,10 @@ module.exports = function(SockJS, availableTransports) {
 
 var EventEmitter = __webpack_require__(15).EventEmitter
   , inherits = __webpack_require__(5)
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , utils = __webpack_require__(29)
-  , IframeTransport = __webpack_require__(282)
-  , InfoReceiverIframe = __webpack_require__(276)
+  , IframeTransport = __webpack_require__(283)
+  , InfoReceiverIframe = __webpack_require__(277)
   ;
 
 var debug = function() {};
@@ -76571,7 +76383,7 @@ module.exports = InfoIframe;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 515 */
+/* 516 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -76581,11 +76393,11 @@ var EventEmitter = __webpack_require__(15).EventEmitter
   , inherits = __webpack_require__(5)
   , urlUtils = __webpack_require__(19)
   , XDR = __webpack_require__(100)
-  , XHRCors = __webpack_require__(64)
+  , XHRCors = __webpack_require__(63)
   , XHRLocal = __webpack_require__(48)
-  , XHRFake = __webpack_require__(527)
-  , InfoIframe = __webpack_require__(514)
-  , InfoAjax = __webpack_require__(275)
+  , XHRFake = __webpack_require__(528)
+  , InfoIframe = __webpack_require__(515)
+  , InfoAjax = __webpack_require__(276)
   ;
 
 var debug = function() {};
@@ -76668,31 +76480,31 @@ module.exports = InfoReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 516 */
+/* 517 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process, global) {
 
-__webpack_require__(517);
+__webpack_require__(518);
 
 var URL = __webpack_require__(102)
   , inherits = __webpack_require__(5)
-  , JSON3 = __webpack_require__(24)
+  , JSON3 = __webpack_require__(25)
   , random = __webpack_require__(41)
-  , escape = __webpack_require__(532)
+  , escape = __webpack_require__(533)
   , urlUtils = __webpack_require__(19)
   , eventUtils = __webpack_require__(29)
-  , transport = __webpack_require__(534)
+  , transport = __webpack_require__(535)
   , objectUtils = __webpack_require__(101)
   , browser = __webpack_require__(49)
-  , log = __webpack_require__(533)
+  , log = __webpack_require__(534)
   , Event = __webpack_require__(98)
-  , EventTarget = __webpack_require__(274)
-  , loc = __webpack_require__(277)
-  , CloseEvent = __webpack_require__(510)
-  , TransportMessageEvent = __webpack_require__(511)
-  , InfoReceiver = __webpack_require__(515)
+  , EventTarget = __webpack_require__(275)
+  , loc = __webpack_require__(278)
+  , CloseEvent = __webpack_require__(511)
+  , TransportMessageEvent = __webpack_require__(512)
+  , InfoReceiver = __webpack_require__(516)
   ;
 
 var debug = function() {};
@@ -76837,7 +76649,7 @@ SockJS.prototype.send = function(data) {
   this._transport.send(escape.quote(data));
 };
 
-SockJS.version = __webpack_require__(286);
+SockJS.version = __webpack_require__(287);
 
 SockJS.CONNECTING = 0;
 SockJS.OPEN = 1;
@@ -77050,14 +76862,14 @@ SockJS.prototype.countRTO = function(rtt) {
 
 module.exports = function(availableTransports) {
   transports = transport(availableTransports);
-  __webpack_require__(513)(SockJS, availableTransports);
+  __webpack_require__(514)(SockJS, availableTransports);
   return SockJS;
 };
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 517 */
+/* 518 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77516,7 +77328,7 @@ defineProperties(StringPrototype, {
 
 
 /***/ }),
-/* 518 */
+/* 519 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77524,24 +77336,24 @@ defineProperties(StringPrototype, {
 
 module.exports = [
   // streaming transports
-  __webpack_require__(528)
-, __webpack_require__(530)
-, __webpack_require__(284)
-, __webpack_require__(280)
-, __webpack_require__(99)(__webpack_require__(280))
-
-  // polling transports
+  __webpack_require__(529)
+, __webpack_require__(531)
+, __webpack_require__(285)
 , __webpack_require__(281)
 , __webpack_require__(99)(__webpack_require__(281))
-, __webpack_require__(285)
-, __webpack_require__(529)
-, __webpack_require__(99)(__webpack_require__(285))
-, __webpack_require__(520)
+
+  // polling transports
+, __webpack_require__(282)
+, __webpack_require__(99)(__webpack_require__(282))
+, __webpack_require__(286)
+, __webpack_require__(530)
+, __webpack_require__(99)(__webpack_require__(286))
+, __webpack_require__(521)
 ];
 
 
 /***/ }),
-/* 519 */
+/* 520 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77559,7 +77371,7 @@ if (Driver) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 520 */
+/* 521 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77574,9 +77386,9 @@ if (Driver) {
 //   o for Konqueror a dumb timer is needed to detect errors
 
 var inherits = __webpack_require__(5)
-  , SenderReceiver = __webpack_require__(283)
-  , JsonpReceiver = __webpack_require__(525)
-  , jsonpSender = __webpack_require__(526)
+  , SenderReceiver = __webpack_require__(284)
+  , JsonpReceiver = __webpack_require__(526)
+  , jsonpSender = __webpack_require__(527)
   ;
 
 function JsonPTransport(transUrl) {
@@ -77601,7 +77413,7 @@ module.exports = JsonPTransport;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 521 */
+/* 522 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77696,7 +77508,7 @@ module.exports = BufferedSender;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 522 */
+/* 523 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77761,7 +77573,7 @@ module.exports = Polling;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 523 */
+/* 524 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77769,7 +77581,7 @@ module.exports = Polling;
 
 var inherits = __webpack_require__(5)
   , EventEmitter = __webpack_require__(15).EventEmitter
-  , EventSourceDriver = __webpack_require__(279)
+  , EventSourceDriver = __webpack_require__(280)
   ;
 
 var debug = function() {};
@@ -77832,7 +77644,7 @@ module.exports = EventSourceReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 524 */
+/* 525 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77927,7 +77739,7 @@ module.exports = HtmlfileReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 525 */
+/* 526 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78118,7 +77930,7 @@ module.exports = JsonpReceiver;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 526 */
+/* 527 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78225,7 +78037,7 @@ module.exports = function(url, payload, callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7)))
 
 /***/ }),
-/* 527 */
+/* 528 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78256,7 +78068,7 @@ module.exports = XHRFake;
 
 
 /***/ }),
-/* 528 */
+/* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78266,7 +78078,7 @@ var utils = __webpack_require__(29)
   , urlUtils = __webpack_require__(19)
   , inherits = __webpack_require__(5)
   , EventEmitter = __webpack_require__(15).EventEmitter
-  , WebsocketDriver = __webpack_require__(519)
+  , WebsocketDriver = __webpack_require__(520)
   ;
 
 var debug = function() {};
@@ -78363,7 +78175,7 @@ module.exports = WebSocketTransport;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 529 */
+/* 530 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78371,8 +78183,8 @@ module.exports = WebSocketTransport;
 
 var inherits = __webpack_require__(5)
   , AjaxBasedTransport = __webpack_require__(40)
-  , XdrStreamingTransport = __webpack_require__(284)
-  , XhrReceiver = __webpack_require__(63)
+  , XdrStreamingTransport = __webpack_require__(285)
+  , XhrReceiver = __webpack_require__(62)
   , XDRObject = __webpack_require__(100)
   ;
 
@@ -78393,7 +78205,7 @@ module.exports = XdrPollingTransport;
 
 
 /***/ }),
-/* 530 */
+/* 531 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78401,8 +78213,8 @@ module.exports = XdrPollingTransport;
 
 var inherits = __webpack_require__(5)
   , AjaxBasedTransport = __webpack_require__(40)
-  , XhrReceiver = __webpack_require__(63)
-  , XHRCorsObject = __webpack_require__(64)
+  , XhrReceiver = __webpack_require__(62)
+  , XHRCorsObject = __webpack_require__(63)
   , XHRLocalObject = __webpack_require__(48)
   , browser = __webpack_require__(49)
   ;
@@ -78442,7 +78254,7 @@ module.exports = XhrStreamingTransport;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 531 */
+/* 532 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78467,13 +78279,13 @@ if (global.crypto && global.crypto.getRandomValues) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 532 */
+/* 533 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var JSON3 = __webpack_require__(24);
+var JSON3 = __webpack_require__(25);
 
 // Some extra characters that Chrome gets wrong, and substitutes with
 // something else on the wire.
@@ -78524,7 +78336,7 @@ module.exports = {
 
 
 /***/ }),
-/* 533 */
+/* 534 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78550,7 +78362,7 @@ module.exports = logObject;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 534 */
+/* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78608,7 +78420,7 @@ module.exports = function(availableTransports) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 535 */
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78621,7 +78433,7 @@ module.exports = function (str) {
 
 
 /***/ }),
-/* 536 */
+/* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78634,14 +78446,14 @@ module.exports = function (str) {
 
 
 /***/ }),
-/* 537 */
+/* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(538);
+module.exports = __webpack_require__(539);
 
 
 /***/ }),
-/* 538 */
+/* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78651,7 +78463,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(539);
+var _ponyfill = __webpack_require__(540);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -78677,7 +78489,7 @@ exports['default'] = result;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(51)(module)))
 
 /***/ }),
-/* 539 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78706,7 +78518,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 540 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78767,7 +78579,7 @@ module.exports = function lolcation(loc) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 541 */
+/* 542 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78794,8 +78606,8 @@ module.exports = function lolcation(loc) {
 
 
 
-var punycode = __webpack_require__(375);
-var util = __webpack_require__(542);
+var punycode = __webpack_require__(376);
+var util = __webpack_require__(543);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -78870,7 +78682,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'gopher:': true,
       'file:': true
     },
-    querystring = __webpack_require__(379);
+    querystring = __webpack_require__(380);
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && util.isObject(url) && url instanceof Url) return url;
@@ -79506,7 +79318,7 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 542 */
+/* 543 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -79529,7 +79341,7 @@ module.exports = {
 
 
 /***/ }),
-/* 543 */
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -79597,13 +79409,13 @@ module.exports = warning;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 544 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // The error overlay is inspired (and mostly copied) from Create React App (https://github.com/facebookincubator/create-react-app)
 // They, in turn, got inspired by webpack-hot-middleware (https://github.com/glenjamin/webpack-hot-middleware).
 var ansiHTML = __webpack_require__(296);
-var Entities = __webpack_require__(361).AllHtmlEntities;
+var Entities = __webpack_require__(362).AllHtmlEntities;
 var entities = new Entities();
 
 var colors = {
@@ -79729,10 +79541,10 @@ exports.showMessage = function handleMessage(messages) {
 
 
 /***/ }),
-/* 545 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var SockJS = __webpack_require__(509);
+var SockJS = __webpack_require__(510);
 
 var retries = 0;
 var sock = null;
@@ -79776,7 +79588,7 @@ module.exports = socket;
 
 
 /***/ }),
-/* 546 */
+/* 547 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -79785,7 +79597,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 547 */
+/* 548 */
 /***/ (function(module, exports) {
 
 /*
@@ -79821,7 +79633,7 @@ module.exports = function(updatedModules, renewedModules) {
 
 
 /***/ }),
-/* 548 */
+/* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -79831,8 +79643,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 (function(define) { 'use strict';
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
 
-	var makePromise = __webpack_require__(560);
-	var Scheduler = __webpack_require__(549);
+	var makePromise = __webpack_require__(561);
+	var Scheduler = __webpack_require__(550);
 	var async = __webpack_require__(103).asap;
 
 	return makePromise({
@@ -79845,7 +79657,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 549 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -79932,7 +79744,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 550 */
+/* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -79942,8 +79754,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 (function(define) { 'use strict';
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
 
-	var state = __webpack_require__(290);
-	var applier = __webpack_require__(289);
+	var state = __webpack_require__(291);
+	var applier = __webpack_require__(290);
 
 	return function array(Promise) {
 
@@ -80238,7 +80050,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 551 */
+/* 552 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80405,7 +80217,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 552 */
+/* 553 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80439,7 +80251,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 553 */
+/* 554 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80449,7 +80261,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 (function(define) { 'use strict';
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
 
-	var inspect = __webpack_require__(290).inspect;
+	var inspect = __webpack_require__(291).inspect;
 
 	return function inspection(Promise) {
 
@@ -80466,7 +80278,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 554 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80538,7 +80350,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 555 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80569,7 +80381,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 556 */
+/* 557 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80580,7 +80392,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
 
 	var env = __webpack_require__(103);
-	var TimeoutError = __webpack_require__(288);
+	var TimeoutError = __webpack_require__(289);
 
 	function setTimeout(f, ms, x, y) {
 		return env.setTimer(function() {
@@ -80654,7 +80466,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 557 */
+/* 558 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80665,7 +80477,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 !(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
 
 	var setTimer = __webpack_require__(103).setTimer;
-	var format = __webpack_require__(559);
+	var format = __webpack_require__(560);
 
 	return function unhandledRejection(Promise) {
 
@@ -80747,7 +80559,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 558 */
+/* 559 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80792,7 +80604,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 559 */
+/* 560 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -80855,7 +80667,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 
 /***/ }),
-/* 560 */
+/* 561 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-2014 original author or authors */
@@ -81818,12 +81630,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 561 */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
 /* 562 */
 /***/ (function(module, exports) {
 
@@ -81831,6 +81637,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/** @license MIT License (c) copyright 2010-20
 
 /***/ }),
 /* 563 */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+/* 564 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(294);

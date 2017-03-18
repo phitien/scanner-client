@@ -1,11 +1,16 @@
-#brand .app-name {
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase; }
-
-#brand .scb-text {
-  font-size: 14px;
-  font-weight: normal;
-  text-transform: uppercase; }
+#brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; }
+  #brand .app-name {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 3px; }
+  #brand .scb-text {
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-left: 3px; }
 
 /*# sourceMappingURL=app.css.map*/
