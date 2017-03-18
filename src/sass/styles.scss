@@ -1,0 +1,14 @@
+@import './constants/__init__';
+@import './mixins/__init__';
+@import './components/__init__';
+@import './responsive/__init__';
+
+#brand {
+  display: flex;align-items: center;justify-content: flex-start;
+  .app-name {
+    font-size: 14px;font-weight: bold;text-transform: uppercase;margin-right: 3px;
+  }
+  .scb-text {
+    font-size: 14px;font-weight: normal;text-transform: uppercase;margin-left: 3px;
+  }
+}
